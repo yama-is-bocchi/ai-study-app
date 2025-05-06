@@ -1,9 +1,16 @@
 ARG UBUNTU_VERSION=22.04
 FROM ubuntu:${UBUNTU_VERSION}
 
-# install git
+# install dev tools
 RUN apt-get update \
-    && apt-get install -y git
+    && apt-get install -y \
+    build-essential \
+    cmake \
+    libomp-dev \
+    python3-dev \
+    git \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # japanize
 RUN set -x \
