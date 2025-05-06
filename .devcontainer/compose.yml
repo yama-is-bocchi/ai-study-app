@@ -24,9 +24,6 @@ services:
     environment:
       POSTGRES_USER: 'vscode'
       POSTGRES_PASSWORD: 'postgres'
-      LANG : 'ja_JP.UTF-8'
-      LANGUAGE : 'ja_JP:ja'
-      LC_ALL : 'ja_JP.UTF-8'
     tty: true
 
 volumes:
