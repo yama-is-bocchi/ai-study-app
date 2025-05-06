@@ -1,0 +1,20 @@
+{
+    "useGitignore": true,
+    "ignorePaths": [
+        "**/.devcontainer/**",
+        "**/.git/objects/**",
+        "**/.gitignore",
+        "**/.dockerignore",
+        "**/.vscode/**",
+        "**/uv.lock",
+        "**/pyproject.toml",
+        ".env",
+        ".env.example",
+        "data/prompt/**"
+    ],
+    "words": [
+        "pytest",
+        "ainvoke",
+        "modelcontextprotocol"
+    ]
+}

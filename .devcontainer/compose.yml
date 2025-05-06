@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  dev:
+    build:
+      dockerfile: Dockerfile
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    volumes:
+      - type: bind
+        source: ..
+        target: /workspace
+        consistency: cached
+    environment:
+      LANG : 'ja_JP.UTF-8'
+      LANGUAGE : 'ja_JP:ja'
+      LC_ALL : 'ja_JP.UTF-8'
+    init: true
+
+  dev_db:
+    image: postgres:17
+    container_name: dev_db
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: 'vscode'
+      POSTGRES_PASSWORD: 'postgres'
+      LANG : 'ja_JP.UTF-8'
+      LANGUAGE : 'ja_JP:ja'
+      LC_ALL : 'ja_JP.UTF-8'
+    tty: true
+
+volumes:
+  db-data:
+    driver: local

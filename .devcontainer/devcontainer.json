@@ -1,0 +1,21 @@
+{
+    "name": "${localWorkspaceFolderBasename}",
+    "dockerComposeFile": "compose.yml",
+    "service": "dev",
+    "containerUser": "vscode",
+    "workspaceFolder": "/workspace",
+    "remoteUser": "vscode",
+    "updateRemoteUserUID": true,
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.mypy-type-checker",
+                "ms-python.python",
+                "njpwerner.autodocstring",
+                "njqdev.vscode-python-typehint",
+                "Percy.vscode-pydata-viewer",
+                "biomejs.biome"
+            ]
+        }
+    }
+}
