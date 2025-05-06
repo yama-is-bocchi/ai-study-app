@@ -24,6 +24,9 @@
     "python.analysis.indexing": false,
     "python.analysis.autoImportCompletions": true,
     "python.analysis.autoFormatStrings": true,
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingTypeStubs": "none"
+    },
     "[python]": {
         "editor.inlayHints.enabled": "off",
         "editor.codeActionsOnSave": {

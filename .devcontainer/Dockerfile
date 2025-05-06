@@ -56,7 +56,9 @@ ARG NODE_VERSION=22
 RUN sudo apt-get update && \
     sudo apt-get install -y curl gettext-base && \
     curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - && \
-    sudo apt-get install -y nodejs
+    sudo apt-get install -y nodejs npm && \
+    sudo npm install -g n && \
+    sudo n ${NODE_VERSION}
 
 # install bun
 ARG BUN_VERSION=1.2.12

@@ -8,7 +8,7 @@ dependencies = [
     "langchain-chroma>=0.2.2",
     "langchain-community>=0.3.18",
     "langchain-openai>=0.3.7",
-    "langchain-mcp-adapters>=0.0.9",
+    "langchain-mcp-adapters>=0.0.10",
     "fastapi>=0.115.12",
     "psycopg2-binary>=2.9.10"
 ]
@@ -21,10 +21,6 @@ dev = [
     "types-requests>=2.32.0.20241016",
     "types-psycopg2>=2.9.10"
 ]
-
-[tool.setuptools.packages.find]
-where = ["src"]
-exclude = ["test"]
 
 [tool.mypy]
 python_version = "3.13"

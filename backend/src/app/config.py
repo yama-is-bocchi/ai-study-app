@@ -1,6 +1,8 @@
+import json
 import os
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 from dotenv import load_dotenv
 
@@ -46,3 +48,10 @@ def load_system_prompt(system_prompt_path: str) -> str:
     """プロンプト設定ファイルを読み込む."""
     data_dir = Path(system_prompt_path)
     return data_dir.read_text()
+
+
+def load_mcp_client_params(mcp_config_path: str) -> Any:
+    """data/mcp/config.jsonからmcpクライアントを返す."""
+    path = Path(mcp_config_path)
+    with path.open("r", encoding="utf-8") as text:
+        return json.load(text)

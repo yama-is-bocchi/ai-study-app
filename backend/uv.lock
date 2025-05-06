@@ -1637,7 +1637,7 @@ requires-dist = [
     { name = "langchain", specifier = ">=0.3.19" },
     { name = "langchain-chroma", specifier = ">=0.2.2" },
     { name = "langchain-community", specifier = ">=0.3.18" },
-    { name = "langchain-mcp-adapters", specifier = ">=0.0.9" },
+    { name = "langchain-mcp-adapters", specifier = ">=0.0.10" },
     { name = "langchain-openai", specifier = ">=0.3.7" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
 ]
