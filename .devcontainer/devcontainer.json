@@ -15,7 +15,11 @@
                 "njqdev.vscode-python-typehint",
                 "Percy.vscode-pydata-viewer",
                 "biomejs.biome"
-            ]
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": "/workspace/backend/.venv/bin/python",
+                "python.venvPath": "/workspace/backend/.venv"
+            }
         }
     }
 }
