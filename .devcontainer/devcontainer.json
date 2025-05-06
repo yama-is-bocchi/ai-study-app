@@ -14,6 +14,7 @@
                 "njpwerner.autodocstring",
                 "njqdev.vscode-python-typehint",
                 "Percy.vscode-pydata-viewer",
+                "streetsidesoftware.code-spell-checker",
                 "biomejs.biome"
             ],
             "settings": {
