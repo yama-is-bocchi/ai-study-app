@@ -4,8 +4,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from dotenv import load_dotenv
-
 
 @dataclass
 class Config:
@@ -18,7 +16,6 @@ class Config:
 
 def load_config(dotenv_path: str) -> Config:
     """環境変数をロードしてConfigを返す."""
-    load_dotenv(dotenv_path)
     openai_api_key = os.getenv("OPENAI_API_KEY")
     openai_model = os.getenv("OPENAI_MODEL")
     postgres_user = os.getenv("POSTGRES_USER")
@@ -29,7 +26,6 @@ def load_config(dotenv_path: str) -> Config:
         openai_model,
         postgres_user,
         postgres_password,
-        postgres_host_name,
         postgres_host_name,
     } & {"", None}:
         message = "必要な環境変数がセットされていません。"
