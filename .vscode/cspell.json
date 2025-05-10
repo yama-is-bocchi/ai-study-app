@@ -16,6 +16,7 @@
         "pytest",
         "ainvoke",
         "modelcontextprotocol",
-        "dotenv"
+        "dotenv",
+        "levelname"
     ]
 }

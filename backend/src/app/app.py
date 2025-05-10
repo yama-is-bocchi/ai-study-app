@@ -4,7 +4,10 @@ from langchain_mcp_adapters.client import MultiServerMCPClient  # type: ignore
 from langchain_openai import ChatOpenAI
 
 from .config import Config, load_mcp_client_params, load_system_prompt
+from .lib.logger import get_logger
 from .lib.psql import PsqlClient
+
+logger = get_logger(__name__)
 
 SYSTEM_PROMPT_PATH = "data/conf/system_prompt.md"
 MCP_CONFIG_FILE_PATH = "data/conf/mcp_config.json"
@@ -18,6 +21,7 @@ class App:
         self._config = config
         self._psql_client = PsqlClient(f"host={config.postgres_host_name} dbname={config.postgres_user} user={config.postgres_user} password={config.postgres_password}")
         self._psql_client.create_tables()
+        logger.info("Successful create application")
 
     async def init_langchain_agent(self) -> "App":
         params = load_mcp_client_params(MCP_CONFIG_FILE_PATH)
@@ -36,4 +40,5 @@ class App:
             tools = client.get_tools()
             agent = create_tool_calling_agent(llm, tools, prompt)
             self._agent_executor = AgentExecutor(agent=agent, tools=tools)
+            logger.info("Successful initialize application")
             return self
