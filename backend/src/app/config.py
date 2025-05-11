@@ -14,7 +14,7 @@ class Config:
     postgres_host_name: str
 
 
-def load_config(dotenv_path: str) -> Config:
+def load_config() -> Config:
     """環境変数をロードしてConfigを返す."""
     openai_api_key = os.getenv("OPENAI_API_KEY")
     openai_model = os.getenv("OPENAI_MODEL")

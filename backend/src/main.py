@@ -1,16 +1,17 @@
 import asyncio
-from typing import Final
+
+import uvicorn
 
 from app import App, load_config
-
-ENV_FILE_PATH: Final = "./../.env"
-""".envファイルのパス"""
+from server import Server
 
 
 def main() -> None:
     # 環境変数をロード
-    config = load_config(ENV_FILE_PATH)
-    app = asyncio.run(App(config).init_langchain_agent())
+    app_config = load_config()
+    app = asyncio.run(App(app_config).init_langchain_agent())
+    server = Server(app)
+    uvicorn.run(server.api_router, host="127.0.0.1", port=8080)
 
 
 if __name__ == "__main__":
