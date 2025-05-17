@@ -1,11 +1,11 @@
-from langchain.agents import AgentExecutor, create_tool_calling_agent
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_mcp_adapters.client import MultiServerMCPClient  # type: ignore
+from langchain.agents import AgentExecutor
 from langchain_openai import ChatOpenAI
 
-from .config import Config, load_mcp_client_params, load_system_prompt
+from .config import Config
+from .lib.agent import create_agent
 from .lib.logger import get_logger
 from .lib.psql import PsqlClient
+from .lib.tools import get_mcp_tools
 
 logger = get_logger(__name__)
 
@@ -21,21 +21,15 @@ class App:
         logger.info("Successful create application")
 
     async def init_langchain_agent(self) -> "App":
-        params = load_mcp_client_params(self._config.mcp_config_file_path)
-        async with MultiServerMCPClient(params["mcpServers"]) as client:
-            # プロンプトを設定
-            raw_prompt = load_system_prompt(self._config.system_prompt_path)
-            prompt = ChatPromptTemplate.from_messages([(raw_prompt), ("{input}"), ("placeholder", "{agent_scratchpad}")])
-
-            # LLMを登録
-            llm = ChatOpenAI(
-                model=self._config.openai_model,
-                temperature=0,
-                verbose=True,
-            )
-            # エージェントを登録
-            tools = client.get_tools()
-            agent = create_tool_calling_agent(llm, tools, prompt)
-            self._agent_executor = AgentExecutor(agent=agent, tools=tools)
-            logger.info("Successful initialize application")
-            return self
+        # ツールを取得
+        tools = await get_mcp_tools(self._config.mcp_config_file_path)
+        # LLMを作成
+        llm = ChatOpenAI(
+            model=self._config.openai_model,
+            temperature=0,
+            verbose=True,
+        )
+        # エージェントを作成
+        self._agent_executor = create_agent(llm, tools, self._config.system_prompt_path)
+        logger.info("Successful initialize application")
+        return self
