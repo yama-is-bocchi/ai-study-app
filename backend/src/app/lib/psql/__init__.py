@@ -1,4 +1,4 @@
-from .psql import PsqlClient
+from .psql_client import PsqlClient
 
 __all__ = [
     "PsqlClient",
