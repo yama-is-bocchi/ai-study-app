@@ -4,6 +4,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+SYSTEM_PROMPT_PATH = "data/conf/system_prompt.md"
+MCP_CONFIG_FILE_PATH = "data/conf/mcp_config.json"
+
 
 @dataclass
 class Config:
@@ -12,6 +15,8 @@ class Config:
     postgres_user: str
     postgres_password: str
     postgres_host_name: str
+    system_prompt_path: str = SYSTEM_PROMPT_PATH
+    mcp_config_file_path: str = MCP_CONFIG_FILE_PATH
 
 
 def load_config() -> Config:

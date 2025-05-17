@@ -9,9 +9,6 @@ from .lib.psql import PsqlClient
 
 logger = get_logger(__name__)
 
-SYSTEM_PROMPT_PATH = "data/conf/system_prompt.md"
-MCP_CONFIG_FILE_PATH = "data/conf/mcp_config.json"
-
 
 class App:
     _agent_executor: AgentExecutor
@@ -24,10 +21,10 @@ class App:
         logger.info("Successful create application")
 
     async def init_langchain_agent(self) -> "App":
-        params = load_mcp_client_params(MCP_CONFIG_FILE_PATH)
+        params = load_mcp_client_params(self._config.mcp_config_file_path)
         async with MultiServerMCPClient(params["mcpServers"]) as client:
             # プロンプトを設定
-            raw_prompt = load_system_prompt(SYSTEM_PROMPT_PATH)
+            raw_prompt = load_system_prompt(self._config.system_prompt_path)
             prompt = ChatPromptTemplate.from_messages([(raw_prompt), ("{input}"), ("placeholder", "{agent_scratchpad}")])
 
             # LLMを登録
