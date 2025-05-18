@@ -27,6 +27,8 @@ class App:
         """回答データを参照して苦手傾向にある問題を生成する."""
         field_list = self._psql_client.get_field_list()
         prompt = self._prompt_generator.generate_analysis_question_tuple(field_list)
+        print(prompt)
         raw_response = await self._analysis_agent.chat(prompt)
+        print(raw_response)
         # 回答をJSON形式でパースする
         return json.loads(raw_response)

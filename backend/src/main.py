@@ -1,15 +1,11 @@
 import asyncio
 
-from app import App, load_config
-from server import Server
+from run import run
 
 
 def main() -> None:
-    # 環境変数をロード
-    app_config = asyncio.run(load_config())
-    app = App(app_config)
-    server = Server(app)
-    server.listen_and_serve(8080)
+    # MCPアダプタが非同期呼び出しにしか対応していないのでrun.pyを用意
+    asyncio.run(run())
 
 
 if __name__ == "__main__":

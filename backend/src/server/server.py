@@ -22,6 +22,8 @@ class Server:
         self._api_router.include_router(api_router, prefix="/api/v1")
         logger.info("Successful create server")
 
-    def listen_and_serve(self, port: int) -> None:
+    async def listen_and_serve(self, port: int) -> None:
         """指定したポート番号でサーバーを起動する."""
-        uvicorn.run(self._api_router, host="127.0.0.1", port=port)
+        config = uvicorn.Config(self._api_router, host="127.0.0.1", port=port, loop="asyncio")
+        server = uvicorn.Server(config)
+        await server.serve()

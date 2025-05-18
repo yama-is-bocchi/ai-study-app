@@ -1,14 +1,13 @@
 import os
 from dataclasses import dataclass
 
+from langchain_mcp_adapters.client import MultiServerMCPClient  # type: ignore
 from langchain_openai import ChatOpenAI
 
 from .db.file.loader import load_system_prompt_file
 from .lib.agent import AnalysisAgent
-from .lib.tools import get_mcp_tools
 
 SYSTEM_PROMPT_PATH = "data/conf/system_prompt.md"
-MCP_CONFIG_FILE_PATH = "data/conf/mcp_config.json"
 FIELD_FILE_PATH = "data/conf/.fields"
 
 
@@ -22,7 +21,7 @@ class Config:
     field_config_file_path: str = FIELD_FILE_PATH
 
 
-async def load_config() -> Config:
+async def load_config(mcp_client: MultiServerMCPClient) -> Config:
     """環境変数をロードしてConfigを返す."""
     openai_api_key = os.getenv("OPENAI_API_KEY")
     openai_model = os.getenv("OPENAI_MODEL")
@@ -39,7 +38,7 @@ async def load_config() -> Config:
     } & {"", None}:
         message = "必要な環境変数がセットされていません。"
         raise Exception(message)
-    tools = await get_mcp_tools(MCP_CONFIG_FILE_PATH)
+    tools = mcp_client.get_tools()
     # LLMを作成
     llm = ChatOpenAI(
         model=str(openai_model),
