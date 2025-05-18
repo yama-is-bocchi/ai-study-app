@@ -1,27 +1,34 @@
 import os
 from dataclasses import dataclass
 
+from langchain_openai import ChatOpenAI
+
+from .db.file.loader import load_system_prompt_file
+from .lib.agent import AnalysisAgent
+from .lib.tools import get_mcp_tools
+
 SYSTEM_PROMPT_PATH = "data/conf/system_prompt.md"
 MCP_CONFIG_FILE_PATH = "data/conf/mcp_config.json"
+FIELD_FILE_PATH = "data/conf/.fields"
 
 
 @dataclass
 class Config:
     openai_api_key: str
-    openai_model: str
     postgres_user: str
     postgres_password: str
     postgres_host_name: str
-    system_prompt_path: str = SYSTEM_PROMPT_PATH
-    mcp_config_file_path: str = MCP_CONFIG_FILE_PATH
+    analysis_agent: AnalysisAgent
+    field_config_file_path: str = FIELD_FILE_PATH
 
 
-def load_config() -> Config:
+async def load_config() -> Config:
     """環境変数をロードしてConfigを返す."""
     openai_api_key = os.getenv("OPENAI_API_KEY")
     openai_model = os.getenv("OPENAI_MODEL")
     postgres_user = os.getenv("POSTGRES_USER")
     postgres_password = os.getenv("POSTGRES_PASSWORD")
+    postgres_user = os.getenv("POSTGRES_USER")
     postgres_host_name = os.getenv("POSTGRES_HOST_NAME")
     if {
         openai_api_key,
@@ -32,11 +39,20 @@ def load_config() -> Config:
     } & {"", None}:
         message = "必要な環境変数がセットされていません。"
         raise Exception(message)
-
+    tools = await get_mcp_tools(MCP_CONFIG_FILE_PATH)
+    # LLMを作成
+    llm = ChatOpenAI(
+        model=str(openai_model),
+        temperature=0,
+        verbose=True,
+    )
+    # エージェントを作成
+    prompt = load_system_prompt_file(SYSTEM_PROMPT_PATH)
+    analysis_agent = AnalysisAgent(llm, tools, prompt)
     return Config(
         openai_api_key=str(openai_api_key),
-        openai_model=str(openai_model),
         postgres_user=str(postgres_user),
         postgres_password=str(postgres_password),
         postgres_host_name=str(postgres_host_name),
+        analysis_agent=analysis_agent,
     )

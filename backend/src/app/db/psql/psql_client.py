@@ -13,7 +13,7 @@ class PsqlClient:
         logger.info("Successfully connected to PostgreSQL server.")
 
     def create_tables(self) -> None:
-        """必要なテーブルが存在しない場合は作成する."""
+        """field_table,answer_tableが存在しない場合は作成する."""
         with self._connection.cursor() as cursor:
             # 外部キー制約により、順番は変えてはいけない
             # CREATE_FILED_TABLE -> CREATE_ANSWER_TABLE
@@ -21,3 +21,6 @@ class PsqlClient:
             cursor.execute(CREATE_ANSWER_TABLE)
         self._connection.commit()
         logger.info("Successfully created tables and committed.")
+
+    def insert_filed_table(self, field_list: list[str]) -> None:
+        pass
