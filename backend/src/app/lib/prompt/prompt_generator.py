@@ -13,6 +13,7 @@ class PromptGenerator:
         """app.get_analysis_question向けのプロンプトを返す."""
         template = PromptTemplate(
             input_variables=["field_list"],
+            # TODO @<yama>: プロンプトを調整する.Postgresのクエリが失敗している可能性が高い.  # noqa: FIX002, TD003
             template="""
 # Task
 あなたは問題ジェネレーターです。

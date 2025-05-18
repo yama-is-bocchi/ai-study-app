@@ -23,3 +23,11 @@ async def get_question(
             return {"message": f"random {context}"}
         case QuestionMode.miss:
             return {"message": f"miss {context}"}
+
+
+@api_router.get("/test")
+async def chat(
+    context: Annotated[AppContext, Depends(get_app_context)],
+    chat: str,
+) -> str:
+    return await context.app.test_chat(chat)
