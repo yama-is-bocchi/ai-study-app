@@ -17,7 +17,8 @@ async def get_question(
     match mode:
         case QuestionMode.ai:
             # appからlist[dict[str,str]]を取得
-            return {"message": f"ai {context}"}
+            ans = await context.app.get_analysis_question()
+            return {"message": f"ai {ans}"}
         case QuestionMode.random:
             return {"message": f"random {context}"}
         case QuestionMode.miss:

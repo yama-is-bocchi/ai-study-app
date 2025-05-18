@@ -31,7 +31,14 @@ class PsqlClient:
             return
         # 初期値0でタプルを作成
         values = [(name, 0, 0, 0.0) for name in field_list]
-        with self._connection.cursor() as cur:
-            execute_values(cur, INSERT_FIELD_RECORD, values)
+        with self._connection.cursor() as cursor:
+            execute_values(cursor, INSERT_FIELD_RECORD, values)
             self._connection.commit()
-            logger.info("Inserted %d new records into field_table.", cur.rowcount)
+            logger.info("Inserted %d new records into field_table.", cursor.rowcount)
+
+    def get_field_list(self) -> list[str]:
+        """field_tableに登録されいてるレコード情報を全て取得する."""
+        with self._connection.cursor() as cursor:
+            cursor.execute("SELECT name FROM field_table")
+            rows = cursor.fetchall()
+            return [row[0] for row in rows]

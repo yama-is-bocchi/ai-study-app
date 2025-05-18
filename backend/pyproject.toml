@@ -10,7 +10,8 @@ dependencies = [
     "langchain-openai>=0.3.7",
     "langchain-mcp-adapters>=0.0.10",
     "fastapi>=0.115.12",
-    "psycopg2-binary>=2.9.10"
+    "psycopg2-binary>=2.9.10",
+    "colorlog>=6.9.0",
 ]
 
 [dependency-groups]

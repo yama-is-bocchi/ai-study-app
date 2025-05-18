@@ -19,6 +19,10 @@ class AnalysisAgent:
         self.agent_executor = AgentExecutor(agent=base_agent, tools=tool_list)
         logger.info("Successful create StudyAgent")
 
-    async def get_analysis_question(self) -> list[dict[str, str]]:
-        """回答データ分析をして問題を取得する."""
-        return []
+    async def chat(
+        self,
+        prompt: str,
+    ) -> str:
+        """エージェントにチャットを送信して回答を取得する."""
+        response = await self.agent_executor.ainvoke({"input": prompt})
+        return response["output"]
