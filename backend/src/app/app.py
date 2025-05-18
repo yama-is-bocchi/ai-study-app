@@ -1,7 +1,8 @@
 from langchain_openai import ChatOpenAI
 
 from .config import Config
-from .db import PsqlClient, load_system_prompt_file
+from .db import PsqlClient
+from .db.file.loader import load_system_prompt_file
 from .lib.agent import AnalysisAgent
 from .lib.logger import get_logger
 from .lib.tools import get_mcp_tools
@@ -10,6 +11,8 @@ logger = get_logger(__name__)
 
 
 class App:
+    """アプリケーションの起動にはinit_applicationの実行が必須です."""
+
     _analysis_agent: AnalysisAgent
 
     def __init__(self, config: Config) -> None:
@@ -19,7 +22,7 @@ class App:
         self._psql_client.create_tables()
         logger.info("Successful create application")
 
-    async def init_agent(self) -> "App":
+    async def init_application(self) -> "App":
         # ツールを取得
         tools = await get_mcp_tools(self._config.mcp_config_file_path)
         # LLMを作成
