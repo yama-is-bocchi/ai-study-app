@@ -3,15 +3,14 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query
 
 from app import AppContext, get_app_context
-
-from .api_parameter import QuestionMode
+from server.api.lib.params.api_parameter import QuestionMode
 
 api_router = APIRouter()
 """REST APIのエンドポイントを定義"""
 
 
 @api_router.get("/question")
-def get_question(
+async def get_question(
     context: Annotated[AppContext, Depends(get_app_context)],
     mode: Annotated[QuestionMode, Query(...)],
 ) -> dict[str, str]:

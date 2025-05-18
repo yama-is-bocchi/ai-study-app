@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from app import App, AppContext, get_app_context
 from app.lib.logger import get_logger
 
-from .lib.router import api_router
+from .api.router import api_router
 
 logger = get_logger(__name__)
 

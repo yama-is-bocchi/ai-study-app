@@ -7,7 +7,7 @@ from server import Server
 def main() -> None:
     # 環境変数をロード
     app_config = load_config()
-    app = asyncio.run(App(app_config).init_langchain_agent())
+    app = asyncio.run(App(app_config).init_agent())
     server = Server(app)
     server.listen_and_serve(8080)
 

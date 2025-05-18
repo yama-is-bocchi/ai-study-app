@@ -1,16 +1,16 @@
 from langchain_openai import ChatOpenAI
 
 from .config import Config
-from .lib.agent import StudyAgent
+from .db import PsqlClient, load_system_prompt_file
+from .lib.agent import AnalysisAgent
 from .lib.logger import get_logger
-from .lib.psql import PsqlClient
 from .lib.tools import get_mcp_tools
 
 logger = get_logger(__name__)
 
 
 class App:
-    _agent_executor: StudyAgent
+    _analysis_agent: AnalysisAgent
 
     def __init__(self, config: Config) -> None:
         # psqlクライアントを追加
@@ -19,7 +19,7 @@ class App:
         self._psql_client.create_tables()
         logger.info("Successful create application")
 
-    async def init_langchain_agent(self) -> "App":
+    async def init_agent(self) -> "App":
         # ツールを取得
         tools = await get_mcp_tools(self._config.mcp_config_file_path)
         # LLMを作成
@@ -29,6 +29,7 @@ class App:
             verbose=True,
         )
         # エージェントを作成
-        self._agent_executor = StudyAgent(llm, tools, self._config.system_prompt_path)
+        prompt = load_system_prompt_file(self._config.system_prompt_path)
+        self._analysis_agent = AnalysisAgent(llm, tools, prompt)
         logger.info("Successful initialize application")
         return self
