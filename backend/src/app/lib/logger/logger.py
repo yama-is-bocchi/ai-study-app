@@ -1,15 +1,25 @@
 import logging
-from typing import Literal
+
+import colorlog
 
 
-def get_logger(name: str, level: Literal[20] = logging.INFO) -> logging.Logger:
-    """モジュール単位のloggerを取得する."""
+def get_logger(name: str, level: int = logging.INFO) -> logging.Logger:
     logger = logging.getLogger(name)
     logger.setLevel(level)
 
     if not logger.handlers:
-        handler = logging.StreamHandler()
-        formatter = logging.Formatter("[%(asctime)s] %(levelname)s - %(message)s")
+        handler = colorlog.StreamHandler()
+        formatter = colorlog.ColoredFormatter(
+            "%(log_color)s[%(asctime)s] [%(name)s] [%(levelname)s] : %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+            log_colors={
+                "DEBUG": "cyan",
+                "INFO": "green",
+                "WARNING": "yellow",
+                "ERROR": "red",
+                "CRITICAL": "bold_red",
+            },
+        )
         handler.setFormatter(formatter)
         logger.addHandler(handler)
 
