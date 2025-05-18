@@ -17,6 +17,7 @@ def get_question(
 ) -> dict[str, str]:
     match mode:
         case QuestionMode.ai:
+            # appからlist[dict[str,str]]を取得
             return {"message": f"ai {context}"}
         case QuestionMode.random:
             return {"message": f"random {context}"}

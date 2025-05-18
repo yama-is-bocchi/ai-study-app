@@ -1,8 +1,7 @@
-from langchain.agents import AgentExecutor
 from langchain_openai import ChatOpenAI
 
 from .config import Config
-from .lib.agent import create_agent
+from .lib.agent import StudyAgent
 from .lib.logger import get_logger
 from .lib.psql import PsqlClient
 from .lib.tools import get_mcp_tools
@@ -11,7 +10,7 @@ logger = get_logger(__name__)
 
 
 class App:
-    _agent_executor: AgentExecutor
+    _agent_executor: StudyAgent
 
     def __init__(self, config: Config) -> None:
         # psqlクライアントを追加
@@ -30,6 +29,6 @@ class App:
             verbose=True,
         )
         # エージェントを作成
-        self._agent_executor = create_agent(llm, tools, self._config.system_prompt_path)
+        self._agent_executor = StudyAgent(llm, tools, self._config.system_prompt_path)
         logger.info("Successful initialize application")
         return self

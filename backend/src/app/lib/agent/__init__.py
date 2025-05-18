@@ -1,3 +1,3 @@
-from .create_agent import create_agent
+from .study_agent import StudyAgent
 
-__all__ = ["create_agent"]
+__all__ = ["StudyAgent"]
