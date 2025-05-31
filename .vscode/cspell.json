@@ -16,6 +16,7 @@
         "ainvoke",
         "modelcontextprotocol",
         "dotenv",
-        "levelname"
+        "levelname",
+        "psql"
     ]
 }
