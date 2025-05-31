@@ -1,10 +1,9 @@
-import json
-
 from .config import Config
 from .db import PsqlClient
 from .db.file.loader import load_field_file
 from .lib.logger import get_logger
 from .lib.prompt import PromptGenerator
+from .model import Question
 
 logger = get_logger(__name__)
 
@@ -21,15 +20,23 @@ class App:
         # 分野別情報を取得してレコードを書き込む
         field_list = load_field_file(config.field_config_file_path)
         self._psql_client.insert_filed_table(field_list)
+        # 既に追加されているフィールドも取得できるようにする
+        self._field_list = self._psql_client.get_field_list()
         logger.info("Successful create application")
 
     async def get_analysis_question(self) -> list[dict[str, str]]:
         """回答データを参照して苦手傾向にある問題を生成する."""
-        field_list = self._psql_client.get_field_list()
-        prompt = self._prompt_generator.generate_analysis_question_tuple(field_list)
-        raw_response = await self._analysis_agent.chat(prompt)
+        prompt = self._prompt_generator.generate_analysis_question_prompt(self._field_list)
+        # プロンプトを作成するために回答データをディープリサーチする.
+        # 1.最近の回答傾向
+        # 2.分野別の正答率
+        # 3.プロンプトをマージ
+
+        # 問題のセットが4つ出来るまで繰り返す
+        raw_response: Question = await self._analysis_agent.get_scheme_by_chat(prompt, Question)
         # 回答をJSON形式でパースする
-        return json.loads(raw_response)
+
+        return []
 
     async def test_chat(self, message: str) -> str:
         return await self._analysis_agent.chat(message)
