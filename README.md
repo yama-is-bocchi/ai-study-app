@@ -19,7 +19,7 @@ LLMによる課題生成アプリ
                 "args": [
                     "-y",
                     "@modelcontextprotocol/server-filesystem",
-                    "/workspace"
+                    "/workspace/backend/data/memo"
                 ]
             },
             "postgres": {

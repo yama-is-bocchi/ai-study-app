@@ -6,6 +6,7 @@ from .symbol_filter import SymbolFilter
 
 
 def get_logger(name: str, level: int = logging.INFO) -> logging.Logger:
+    """カスタムロガーを取得できるよ!."""
     logger = logging.getLogger(name)
     logger.setLevel(level)
 
