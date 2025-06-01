@@ -1,6 +1,7 @@
 from psycopg2 import connect
 from psycopg2.extras import execute_values
 
+from app.db.model import Question
 from util import get_logger
 
 from .queries import CREATE_ANSWER_TABLE, CREATE_FILED_TABLE, INSERT_FIELD_RECORD
@@ -41,4 +42,30 @@ class PsqlClient:
         with self._connection.cursor() as cursor:
             cursor.execute("SELECT name FROM field_table")
             rows = cursor.fetchall()
+            logger.info("Successful get field list")
             return [row[0] for row in rows]
+
+    def get_answered_data(self, recent_count: int = 4) -> list[Question]:
+        """idの降順で直近の回答データを取得する."""
+        with self._connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT filed_name, question, answer, correct, timestamp
+                FROM answer_table
+                ORDER BY id DESC
+                LIMIT %s
+            """,
+                (recent_count,),
+            )
+            rows = cursor.fetchall()
+        logger.info("Successful get question list")
+        return [
+            Question(
+                field_name=row[0],
+                question=row[1],
+                answer=row[2],
+                correct=row[3],
+                timestamp=row[4],
+            )
+            for row in rows
+        ]

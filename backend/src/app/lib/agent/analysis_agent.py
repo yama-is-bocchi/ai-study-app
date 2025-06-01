@@ -62,7 +62,7 @@ class AnalysisAgent:
         logger.info("Completed merging report")
         return response.text()
 
-    async def get_scheme_by_chat(
+    def get_scheme_by_chat(
         self,
         prompt: str,
         schema: type[T],
