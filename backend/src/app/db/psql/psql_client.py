@@ -1,7 +1,7 @@
 from psycopg2 import connect
 from psycopg2.extras import execute_values
 
-from app.lib.logger import get_logger
+from util import get_logger
 
 from .queries import CREATE_ANSWER_TABLE, CREATE_FILED_TABLE, INSERT_FIELD_RECORD
 

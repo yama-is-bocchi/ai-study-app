@@ -1,7 +1,8 @@
+from util import get_logger
+
 from .config import Config
 from .db import PsqlClient
 from .db.file.loader import load_field_file
-from .lib.logger import get_logger
 from .lib.prompt import PromptGenerator
 from .model import Question
 

@@ -2,6 +2,8 @@ import logging
 
 import colorlog
 
+from .symbol_filter import SymbolFilter
+
 
 def get_logger(name: str, level: int = logging.INFO) -> logging.Logger:
     logger = logging.getLogger(name)
@@ -9,18 +11,21 @@ def get_logger(name: str, level: int = logging.INFO) -> logging.Logger:
 
     if not logger.handlers:
         handler = colorlog.StreamHandler()
+
         formatter = colorlog.ColoredFormatter(
-            "%(log_color)s[%(asctime)s] [%(name)s] [%(levelname)s] : %(message)s",
+            "%(log_color)s%(symbol)s  ▶ [%(asctime)s] ✦ %(levelname)s ✦ %(name)s:%(lineno)d » %(reset)s%(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
             log_colors={
-                "DEBUG": "cyan",
+                "DEBUG": "blue",
                 "INFO": "green",
                 "WARNING": "yellow",
-                "ERROR": "red",
-                "CRITICAL": "bold_red",
+                "ERROR": "bold_red",
+                "CRITICAL": "bold_purple",
             },
         )
         handler.setFormatter(formatter)
+        handler.addFilter(SymbolFilter())
+
         logger.addHandler(handler)
 
     return logger

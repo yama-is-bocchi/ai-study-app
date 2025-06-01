@@ -2,11 +2,11 @@ from typing import TypeVar, cast
 
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.language_models import BaseLanguageModel
-from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.tools import BaseTool
 from pydantic import BaseModel
 
-from app.lib.logger import get_logger
+from util import get_logger
 
 T = TypeVar("T", bound=BaseModel)
 

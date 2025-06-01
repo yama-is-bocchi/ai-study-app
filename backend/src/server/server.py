@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 
 from app import App, AppContext, get_app_context
-from app.lib.logger import get_logger
+from util import get_logger
 
 from .api.router import api_router
 
