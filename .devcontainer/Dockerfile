@@ -13,10 +13,15 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # japanize
+ENV TZ=Asia/Tokyo
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN set -x \
     && ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
     && echo 'Asia/Tokyo' >/etc/timezone
-
 # create user
 ARG USERNAME=vscode
 RUN --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \

@@ -40,15 +40,17 @@ class App:
         #   - プロンプトを生成
         field_report_prompt = self._prompt_generator.generate_report_prompt_from_field_list(self._field_list)
         #   - エージェントにレポートを作成させる
-        reports = await asyncio.gather(
+        first_report, second_report = await asyncio.gather(
             self._analysis_agent.chat(field_report_prompt),
             self._analysis_agent.chat(history_report_prompt),
         )
         # 3.プロンプトをマージ
+        merged_prompt = self._analysis_agent.merge_report(first_report, second_report)
         # 問題のセットが4つ出来るまで繰り返す
+
         # 回答をJSON形式でパースする
 
-        return []
+        return [{"prompt": merged_prompt}]
 
     async def test_chat(self, message: str) -> str:
         return await self._analysis_agent.chat(message)

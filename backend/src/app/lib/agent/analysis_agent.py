@@ -1,8 +1,8 @@
 from typing import TypeVar, cast
 
 from langchain.agents import AgentExecutor, create_tool_calling_agent
-from langchain_core.language_models import BaseLanguageModel
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.language_models import BaseChatModel
+from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 from langchain_core.tools import BaseTool
 from pydantic import BaseModel
 
@@ -16,7 +16,7 @@ logger = get_logger(__name__)
 class AnalysisAgent:
     def __init__(
         self,
-        llm: BaseLanguageModel,
+        llm: BaseChatModel,
         tool_list: list[BaseTool],
         prompt: ChatPromptTemplate,
     ) -> None:
@@ -31,7 +31,36 @@ class AnalysisAgent:
     ) -> str:
         """エージェントにチャットを送信して回答を取得する."""
         response = await self._agent_executor.ainvoke({"input": prompt})
+        logger.info("Completed agent invoke")
         return response["output"]
+
+    def merge_report(self, first_report: str, second_report: str) -> str:
+        """二つのレポートをマージする."""
+        prompt = PromptTemplate(
+            input_variables=["text1", "text2"],
+            template="""
+# Task
+あなたは優秀なレポートマージャーです。
+与えらている2つのレポートの内容を詳細な1つのレポートにマージしてください。
+
+# Rule
+- ハルシネーションを起こさないこと。
+- 文章に具体的な手順や詳細な情報が含まれている場合、それらは省略や要約せず、できる限りそのまま使用すること。
+- 情報量は多ければ多いほどよい。
+- 図や具体的な数値がレポートに含まれていたら、表示してください。
+
+---
+レポート1:
+{text1}
+
+---
+レポート2:
+{text2}
+""",
+        )
+        response = (prompt | self._llm).invoke({"text1": first_report, "text2": second_report})
+        logger.info("Completed merging report")
+        return response.text()
 
     async def get_scheme_by_chat(
         self,
