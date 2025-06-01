@@ -1,4 +1,7 @@
-from util import get_logger
+import multiprocessing
+from concurrent.futures import ThreadPoolExecutor
+
+from util import get_func_name, get_logger
 
 from .config import Config
 from .db import PsqlClient
@@ -27,17 +30,18 @@ class App:
     async def get_analysis_question(self) -> list[dict[str, str]]:
         """回答データを参照して苦手傾向にある問題を生成する."""
         # プロンプトを作成するために回答データをディープリサーチする.
-        # 1.最近の回答傾向
-        #   - プロンプトを生成
-        #   - エージェントにレポートを作成させる
-        # 2.分野別の正答率
-        #   - プロンプトを生成
-        #   - エージェントにレポートを作成させる
-        # 3.プロンプトをマージ
-        # 問題のセットが4つ出来るまで繰り返す
-        # 回答をJSON形式でパースする
+        with ThreadPoolExecutor(max_workers=multiprocessing.cpu_count(), thread_name_prefix=get_func_name(__name__)) as executor:
+            # 1.最近の回答傾向
+            #   - プロンプトを生成
+            #   - エージェントにレポートを作成させる
+            # 2.分野別の正答率
+            #   - プロンプトを生成
+            #   - エージェントにレポートを作成させる
+            # 3.プロンプトをマージ
+            # 問題のセットが4つ出来るまで繰り返す
+            # 回答をJSON形式でパースする
 
-        return []
+            return []
 
     async def test_chat(self, message: str) -> str:
         return await self._analysis_agent.chat(message)
