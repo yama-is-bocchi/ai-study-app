@@ -17,3 +17,9 @@ async def upload_file(
     """パスのファイル名でファイルを保存する."""
     context.app.upload_file(file_name, await request.body())
     return {"message": f"{file_name} uploaded successfully"}
+
+
+@storage_api_router.get("/memo")
+def get_all_files(context: Annotated[AppContext, Depends(get_app_context)]) -> list:
+    """全ファイルのデータをリストで返す."""
+    return context.app.get_all_memo_from_storage()
