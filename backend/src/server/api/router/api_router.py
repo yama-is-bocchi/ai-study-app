@@ -19,5 +19,5 @@ async def get_question(
             return await context.app.get_analysis_question()
         case QuestionMode.random:
             return context.app.get_random_questions()
-        case QuestionMode.miss:
-            return []
+        case QuestionMode.incorrect:
+            return context.app.get_incorrect_answers(100)

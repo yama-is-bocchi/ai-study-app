@@ -18,8 +18,6 @@ logger = get_logger(__name__)
 class App:
     """DB操作,エージェントを利用したアプリケーションを提供する."""
 
-    __question_sum = 4
-
     def __init__(self, config: Config) -> None:
         # psqlクライアントを追加
         self._analysis_agent = config.analysis_agent
@@ -33,7 +31,7 @@ class App:
         self._field_list = self._psql_client.get_field_list()
         logger.info("Successful create application")
 
-    async def get_analysis_question(self) -> list[GeneratedQuestion]:
+    async def get_analysis_question(self, question_sum: int = 4) -> list[GeneratedQuestion]:
         """回答データを参照して苦手傾向にある問題を生成する."""
         # プロンプトを作成するために回答データをディープリサーチする.
         now = datetime.datetime.now(ZoneInfo("Asia/Tokyo"))
@@ -59,7 +57,7 @@ class App:
 
         # 問題のセットが4つ出来るまで繰り返す
         generated_questions: list[GeneratedQuestion] = []
-        while len(generated_questions) < self.__question_sum:
+        while len(generated_questions) < question_sum:
             # 問題生成用のプロンプトを生成
             # 直前に回答した問題,現在生成している問題を付け加える
             question_prompt, question_input = self._prompt_generator.generate_question_prompt(
@@ -96,7 +94,7 @@ class App:
             )
         return generated_questions
 
-    def get_random_questions(self) -> list[GeneratedQuestion]:
+    def get_random_questions(self, question_sum: int = 4) -> list[GeneratedQuestion]:
         """回答データを参照してランダムに問題を生成する."""
         now = datetime.datetime.now(ZoneInfo("Asia/Tokyo"))
         # 直前に回答した問題
@@ -105,7 +103,7 @@ class App:
 
         # 問題のセットが4つ出来るまで繰り返す
         generated_questions: list[GeneratedQuestion] = []
-        while len(generated_questions) < self.__question_sum:
+        while len(generated_questions) < question_sum:
             # 問題生成用のプロンプトを生成
             # 直前に回答した問題,現在生成している問題を付け加える
             question_prompt, question_input = self._prompt_generator.generate_question_prompt(
@@ -141,3 +139,7 @@ class App:
                 current_question.answer,
             )
         return generated_questions
+
+    def get_incorrect_answers(self, max_limit: int) -> list[Question]:
+        """誤答一覧を取得する."""
+        return [question for question in self._psql_client.get_answered_data(max_limit) if not question.correct]
