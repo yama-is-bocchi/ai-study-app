@@ -1,4 +1,4 @@
-from typing import TypeVar, cast
+from typing import Any, TypeVar, cast
 
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.language_models import BaseChatModel
@@ -62,11 +62,14 @@ class AnalysisAgent:
         logger.info("Completed merging report")
         return response.text()
 
-    def get_scheme_by_chat(
+    def get_scheme_by_chain(
         self,
-        prompt: str,
+        prompt: PromptTemplate,
+        prompt_input: dict[str, Any],
         schema: type[T],
     ) -> T:
         """LLMに型引数のスキーマを指定してレスポンスを取得する."""
         # self._llmを利用する
-        return cast("T", "")
+        response = (prompt | self._llm.with_structured_output(schema=schema, strict=True)).invoke(prompt_input)
+        logger.info("Completed agent invoke with structured output")
+        return cast("T", response)

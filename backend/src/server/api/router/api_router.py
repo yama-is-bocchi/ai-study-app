@@ -13,16 +13,14 @@ api_router = APIRouter()
 async def get_question(
     context: Annotated[AppContext, Depends(get_app_context)],
     mode: Annotated[QuestionMode, Query(...)],
-) -> dict[str, str]:
+) -> list:
     match mode:
         case QuestionMode.ai:
-            # appからlist[dict[str,str]]を取得
-            ans = await context.app.get_analysis_question()
-            return {"message": f"ai {ans}"}
+            return await context.app.get_analysis_question()
         case QuestionMode.random:
-            return {"message": f"random {context}"}
+            return []
         case QuestionMode.miss:
-            return {"message": f"miss {context}"}
+            return []
 
 
 @api_router.get("/test")
