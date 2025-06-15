@@ -11,6 +11,7 @@ from .lib.agent import AnalysisAgent
 SYSTEM_PROMPT_PATH = "data/conf/system_prompt.md"
 FIELD_FILE_PATH = "data/conf/.fields"
 MCP_CONFIG_FILE_PATH = "data/conf/mcp_config.json"
+STORAGE_PATH = "data/memo"
 
 
 @dataclass
@@ -21,6 +22,7 @@ class Config:
     postgres_host_name: str
     analysis_agent: AnalysisAgent
     field_config_file_path: str = FIELD_FILE_PATH
+    storage_path: str = STORAGE_PATH
 
 
 class ConfigLoader:

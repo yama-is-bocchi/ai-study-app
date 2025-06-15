@@ -7,7 +7,7 @@ from pydantic import ValidationError
 from util import get_logger
 
 from .config import Config
-from .db import PsqlClient
+from .db import PsqlClient, StorageClient
 from .db.file.loader import load_field_file
 from .db.model import GeneratedQuestion, Question
 from .lib.prompt import PromptGenerator
@@ -23,6 +23,7 @@ class App:
         self._analysis_agent = config.analysis_agent
         self._prompt_generator = PromptGenerator()
         self._psql_client = PsqlClient(f"host={config.postgres_host_name} dbname={config.postgres_user} user={config.postgres_user} password={config.postgres_password}")
+        self._storage_client = StorageClient(config.storage_path)
         self._psql_client.create_tables()
         # 分野別情報を取得してレコードを書き込む
         field_list = load_field_file(config.field_config_file_path)
@@ -143,3 +144,7 @@ class App:
     def get_incorrect_answers(self, max_limit: int) -> list[Question]:
         """誤答一覧を取得する."""
         return [question for question in self._psql_client.get_answered_data(max_limit) if not question.correct]
+
+    def upload_file(self, file_name: str, file_data: bytes) -> None:
+        """ファイルデータをストレージに保存する."""
+        return self._storage_client.save_file(file_name, file_data)
