@@ -84,6 +84,3 @@ class App:
                 current_question.answer,
             )
         return generated_questions
-
-    async def test_chat(self, message: str) -> str:
-        return await self._analysis_agent.chat(message)
