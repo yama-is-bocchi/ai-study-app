@@ -6,7 +6,7 @@ from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 from langchain_core.tools import BaseTool
 from pydantic import BaseModel
 
-from util import get_logger
+from util import get_func_name, get_logger
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -31,7 +31,7 @@ class AnalysisAgent:
     ) -> str:
         """エージェントにチャットを送信して回答を取得する."""
         response = await self._agent_executor.ainvoke({"input": prompt})
-        logger.info("Completed agent invoke")
+        logger.info("Completed agent invoke via: %s", get_func_name())
         return response["output"]
 
     def merge_report(self, first_report: str, second_report: str) -> str:

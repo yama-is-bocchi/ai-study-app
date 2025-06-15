@@ -64,7 +64,62 @@ class App:
                 merged_prompt,
                 self._field_list,
                 *recent_questions
-                + [Question(field_name=question.field_name, question=question.question, answer=question.answer, correct=False, timestamp=now.timestamp()) for question in generated_questions],
+                + [
+                    Question(
+                        field_name=question.field_name,
+                        question=question.question,
+                        answer=question.answer,
+                        correct=False,
+                        timestamp=now.timestamp(),
+                    )
+                    for question in generated_questions
+                ],
+            )
+            try:
+                # LLMに問題を生成させる
+                logger.info("Requesting LLM to generate questions")
+                current_question = self._analysis_agent.get_scheme_by_chain(question_prompt, question_input, GeneratedQuestion)
+            except ValidationError:
+                logger.exception("Failed to get scheme by chain Answers")
+            # フィールドリストに含まれているか確認
+            if current_question.field_name not in self._field_list:
+                logger.info("A field was selected that is not included in the field list : %s , so generation will be retried", current_question.field_name)
+                continue
+            generated_questions.append(current_question)
+            logger.info(
+                "successful to generate %d questions.\n question: %s , answer: %s",
+                len(generated_questions),
+                current_question.question,
+                current_question.answer,
+            )
+        return generated_questions
+
+    def get_random_questions(self) -> list[GeneratedQuestion]:
+        """回答データを参照してランダムに問題を生成する."""
+        now = datetime.datetime.now(ZoneInfo("Asia/Tokyo"))
+        # 直前に回答した問題
+        recent_questions = self._psql_client.get_answered_data(8)
+        logger.info("%d responses were obtained", len(recent_questions))
+
+        # 問題のセットが4つ出来るまで繰り返す
+        generated_questions: list[GeneratedQuestion] = []
+        while len(generated_questions) < 4:
+            # 問題生成用のプロンプトを生成
+            # 直前に回答した問題,現在生成している問題を付け加える
+            question_prompt, question_input = self._prompt_generator.generate_question_prompt(
+                "",
+                self._field_list,
+                *recent_questions
+                + [
+                    Question(
+                        field_name=question.field_name,
+                        question=question.question,
+                        answer=question.answer,
+                        correct=False,
+                        timestamp=now.timestamp(),
+                    )
+                    for question in generated_questions
+                ],
             )
             try:
                 # LLMに問題を生成させる

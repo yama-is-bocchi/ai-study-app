@@ -18,6 +18,6 @@ async def get_question(
         case QuestionMode.ai:
             return await context.app.get_analysis_question()
         case QuestionMode.random:
-            return []
+            return context.app.get_random_questions()
         case QuestionMode.miss:
             return []
