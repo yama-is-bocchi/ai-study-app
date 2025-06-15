@@ -18,6 +18,8 @@ logger = get_logger(__name__)
 class App:
     """DB操作,エージェントを利用したアプリケーションを提供する."""
 
+    __question_sum = 4
+
     def __init__(self, config: Config) -> None:
         # psqlクライアントを追加
         self._analysis_agent = config.analysis_agent
@@ -57,7 +59,7 @@ class App:
 
         # 問題のセットが4つ出来るまで繰り返す
         generated_questions: list[GeneratedQuestion] = []
-        while len(generated_questions) < 4:
+        while len(generated_questions) < self.__question_sum:
             # 問題生成用のプロンプトを生成
             # 直前に回答した問題,現在生成している問題を付け加える
             question_prompt, question_input = self._prompt_generator.generate_question_prompt(
@@ -103,7 +105,7 @@ class App:
 
         # 問題のセットが4つ出来るまで繰り返す
         generated_questions: list[GeneratedQuestion] = []
-        while len(generated_questions) < 4:
+        while len(generated_questions) < self.__question_sum:
             # 問題生成用のプロンプトを生成
             # 直前に回答した問題,現在生成している問題を付け加える
             question_prompt, question_input = self._prompt_generator.generate_question_prompt(
