@@ -143,8 +143,10 @@ class App:
 
     def get_incorrect_answers(self, max_limit: int) -> list[Question]:
         """誤答一覧を取得する."""
+        logger.info("Getting incorrect answer data")
         return [question for question in self._psql_client.get_answered_data(max_limit) if not question.correct]
 
     def upload_file(self, file_name: str, file_data: bytes) -> None:
         """ファイルデータをストレージに保存する."""
+        logger.info("The acquired data is stored in the storage")
         return self._storage_client.save_file(file_name, file_data)
