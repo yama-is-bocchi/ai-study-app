@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+import json
 from zoneinfo import ZoneInfo
 
 from pydantic import ValidationError
@@ -27,7 +28,7 @@ class App:
         self._psql_client.create_tables()
         # 分野別情報を取得してレコードを書き込む
         field_list = load_field_file(config.field_config_file_path)
-        self._psql_client.insert_filed_table(field_list)
+        self._psql_client.insert_filed_record(field_list)
         # 既に追加されているフィールドも取得できるようにする
         self._field_list = self._psql_client.get_field_list()
         logger.info("Successful create application")
@@ -71,7 +72,6 @@ class App:
                         question=question.question,
                         answer=question.answer,
                         correct=False,
-                        timestamp=now.timestamp(),
                     )
                     for question in generated_questions
                 ],
@@ -117,7 +117,6 @@ class App:
                         question=question.question,
                         answer=question.answer,
                         correct=False,
-                        timestamp=now.timestamp(),
                     )
                     for question in generated_questions
                 ],
@@ -145,6 +144,17 @@ class App:
         """誤答一覧を取得する."""
         logger.info("Getting incorrect answer data...")
         return [question for question in self._psql_client.get_answered_data(max_limit) if not question.correct]
+
+    def register_answer_to_psql(self, raw_data: bytes) -> None:
+        """バイト型のデータをパースしてPSQLのレコードに登録する"""
+        logger.info("Parsing raw bytes data")
+        # パースする
+        body_dict = json.loads(raw_data)
+        question = Question(**body_dict)
+        # 解答履歴データに追加
+        self._psql_client.insert_answer_record(question)
+        # 正答率を更新
+
 
     def upload_file(self, file_name: str, file_data: bytes) -> None:
         """ファイルデータをストレージに保存する."""

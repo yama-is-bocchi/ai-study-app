@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS field_table (
 CREATE_ANSWER_TABLE = """
 CREATE TABLE IF NOT EXISTS answer_table (
     id SERIAL PRIMARY KEY,
-    filed_name TEXT REFERENCES field_table(name) ON DELETE CASCADE,
+    field_name TEXT REFERENCES field_table(name) ON DELETE CASCADE,
     question TEXT,
     answer TEXT,
     correct BOOLEAN,

@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 
 from app import AppContext, get_app_context
 from server.api.lib.params.api_parameter import QuestionMode
@@ -22,3 +22,10 @@ async def get_question(
             return context.app.get_random_questions()
         case QuestionMode.incorrect:
             return context.app.get_incorrect_answers(100)
+
+
+@question_api_router.post("/answer")
+async def register_answer(request: Request, context: Annotated[AppContext, Depends(get_app_context)]) -> dict[str, str]:
+    """回答データをデータベースに登録する."""
+    context.app.register_answer_to_psql(await request.body())
+    return {"message": "answer register successfully"}

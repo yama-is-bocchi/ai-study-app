@@ -4,7 +4,7 @@ from psycopg2.extras import execute_values
 from app.db.model import Question
 from util import get_logger
 
-from .queries import CREATE_ANSWER_TABLE, CREATE_FILED_TABLE, INSERT_FIELD_RECORD
+from .queries import CREATE_ANSWER_TABLE, CREATE_FILED_TABLE, INSERT_ANSWER_RECORD, INSERT_FIELD_RECORD, SELECT_ANSWER_TABLE_BY_LIMIT, SELECT_NAME_FROM_FIELD_TABLE
 
 logger = get_logger(__name__)
 
@@ -24,7 +24,7 @@ class PsqlClient:
         self._connection.commit()
         logger.info("Successfully created tables and committed.")
 
-    def insert_filed_table(self, field_list: list[str]) -> None:
+    def insert_filed_record(self, field_list: list[str]) -> None:
         """引数のリストをfield_tableのレコードに追加する."""
         # リストが空なら早期リターン
         if not field_list:
@@ -37,10 +37,25 @@ class PsqlClient:
             self._connection.commit()
             logger.info("Inserted %d new records into field_table.", cursor.rowcount)
 
+    def insert_answer_record(self, question: Question) -> None:
+        """引数のリストをanswer_tableのレコードに追加する."""
+        with self._connection.cursor() as cursor:
+            values = [
+                (
+                    question.field_name,
+                    question.question,
+                    question.answer,
+                    question.correct,
+                ),
+            ]
+            execute_values(cursor, INSERT_ANSWER_RECORD, values)
+            self._connection.commit()
+            logger.info("Inserted %d new records into answer_table.", cursor.rowcount)
+
     def get_field_list(self) -> list[str]:
         """field_tableに登録されいてるレコード情報を全て取得する."""
         with self._connection.cursor() as cursor:
-            cursor.execute("SELECT name FROM field_table")
+            cursor.execute(SELECT_NAME_FROM_FIELD_TABLE)
             rows = cursor.fetchall()
             logger.info("Successful get field list")
             return [row[0] for row in rows]
@@ -49,12 +64,7 @@ class PsqlClient:
         """idの降順で直近の回答データを取得する."""
         with self._connection.cursor() as cursor:
             cursor.execute(
-                """
-                SELECT filed_name, question, answer, correct, timestamp
-                FROM answer_table
-                ORDER BY id DESC
-                LIMIT %s
-            """,
+                SELECT_ANSWER_TABLE_BY_LIMIT,
                 (recent_count,),
             )
             rows = cursor.fetchall()

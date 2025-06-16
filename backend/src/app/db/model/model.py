@@ -1,3 +1,4 @@
+import datetime
 from pydantic import BaseModel, Field
 
 
@@ -6,7 +7,7 @@ class Question(BaseModel):
     question: str = Field(description="生成した問題文", strict=True)
     answer: str = Field(description="生成した問題に対する回答", strict=True)
     correct: bool
-    timestamp: float
+    timestamp: datetime.datetime | None = None
 
 
 class GeneratedQuestion(BaseModel):
