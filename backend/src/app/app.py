@@ -155,3 +155,8 @@ class App:
         """ストレージに保存されているファイルを全て読み込んで返す."""
         logger.info("Getting all files in storage...")
         return self._storage_client.read_all_markdown_files(365)
+
+    def delete_file_from_storage(self, file_name: str) -> None:
+        """ストレージ内のファイルを削除する"""
+        logger.info("Deleting %s in the storage...", file_name)
+        return self._storage_client.delete_file(file_name)

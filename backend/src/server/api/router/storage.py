@@ -21,5 +21,15 @@ async def upload_file(
 
 @storage_api_router.get("/memo")
 def get_all_files(context: Annotated[AppContext, Depends(get_app_context)]) -> list:
-    """全ファイルのデータをリストで返す."""
+    """全ファイルのメモデータをリストで返す."""
     return context.app.get_all_memo_from_storage()
+
+
+@storage_api_router.delete("/{file_name}")
+def delete_file(
+    file_name: str,
+    context: Annotated[AppContext, Depends(get_app_context)],
+) -> dict[str, str]:
+    """パスのファイル名のファイルを削除する."""
+    context.app.delete_file_from_storage(file_name)
+    return {"message": f"{file_name} deleted successfully"}

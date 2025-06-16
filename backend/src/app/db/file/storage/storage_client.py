@@ -28,3 +28,12 @@ class StorageClient:
             result.append(FileInfo(name=file.name, data=data))
 
         return result
+
+    def delete_file(self, file_name: str) -> None:
+        """対象のファイル名のデータを削除する."""
+        file_path = self._dir_path / file_name
+        if file_path.exists():
+            file_path.unlink()
+            return
+        msg = "Not found :%s"
+        raise FileNotFoundError(msg, file_path)
