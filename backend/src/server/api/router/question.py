@@ -28,4 +28,4 @@ async def get_question(
 async def register_answer(request: Request, context: Annotated[AppContext, Depends(get_app_context)]) -> dict[str, str]:
     """回答データをデータベースに登録する."""
     context.app.register_answer_to_psql(await request.body())
-    return {"message": "answer register successfully"}
+    return {"message": "answer data has been successfully registered"}

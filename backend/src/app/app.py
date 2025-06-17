@@ -97,7 +97,6 @@ class App:
 
     def get_random_questions(self, question_sum: int = 4) -> list[GeneratedQuestion]:
         """回答データを参照してランダムに問題を生成する."""
-        now = datetime.datetime.now(ZoneInfo("Asia/Tokyo"))
         # 直前に回答した問題
         recent_questions = self._psql_client.get_answered_data(8)
         logger.info("%d responses were obtained", len(recent_questions))
@@ -146,7 +145,7 @@ class App:
         return [question for question in self._psql_client.get_answered_data(max_limit) if not question.correct]
 
     def register_answer_to_psql(self, raw_data: bytes) -> None:
-        """バイト型のデータをパースしてPSQLのレコードに登録する"""
+        """バイト型のデータをパースしてPSQLのレコードに登録する."""
         logger.info("Parsing raw bytes data")
         # パースする
         body_dict = json.loads(raw_data)
@@ -154,7 +153,10 @@ class App:
         # 解答履歴データに追加
         self._psql_client.insert_answer_record(question)
         # 正答率を更新
-
+        if question.correct:
+            self._psql_client.increment_correct(question.field_name)
+            return
+        self._psql_client.increment_incorrect(question.field_name)
 
     def upload_file(self, file_name: str, file_data: bytes) -> None:
         """ファイルデータをストレージに保存する."""
@@ -167,6 +169,6 @@ class App:
         return self._storage_client.read_all_markdown_files(365)
 
     def delete_file_from_storage(self, file_name: str) -> None:
-        """ストレージ内のファイルを削除する"""
+        """ストレージ内のファイルを削除する."""
         logger.info("Deleting %s in the storage...", file_name)
         return self._storage_client.delete_file(file_name)

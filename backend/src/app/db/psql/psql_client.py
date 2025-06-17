@@ -4,7 +4,16 @@ from psycopg2.extras import execute_values
 from app.db.model import Question
 from util import get_logger
 
-from .queries import CREATE_ANSWER_TABLE, CREATE_FILED_TABLE, INSERT_ANSWER_RECORD, INSERT_FIELD_RECORD, SELECT_ANSWER_TABLE_BY_LIMIT, SELECT_NAME_FROM_FIELD_TABLE
+from .queries import (
+    CREATE_ANSWER_TABLE,
+    CREATE_FILED_TABLE,
+    INCREMENT_FIELDS_CORRECT,
+    INCREMENT_FIELDS_INCORRECT,
+    INSERT_ANSWER_RECORD,
+    INSERT_FIELD_RECORD,
+    SELECT_ANSWER_TABLE_BY_LIMIT,
+    SELECT_NAME_FROM_FIELD_TABLE,
+)
 
 logger = get_logger(__name__)
 
@@ -79,3 +88,17 @@ class PsqlClient:
             )
             for row in rows
         ]
+
+    def increment_correct(self, field_name: str) -> None:
+        """対象の分野名の正答数をインクリメントして正答率を更新する."""
+        with self._connection.cursor() as cursor:
+            cursor.execute(INCREMENT_FIELDS_CORRECT, (field_name,))
+            self._connection.commit()
+            logger.info("The number of correct answers for %s records has been incremented and updated.", cursor.rowcount)
+
+    def increment_incorrect(self, field_name: str) -> None:
+        """対象の分野名の誤答数をインクリメントして正答率を更新する."""
+        with self._connection.cursor() as cursor:
+            cursor.execute(INCREMENT_FIELDS_INCORRECT, (field_name,))
+            self._connection.commit()
+            logger.info("The number of incorrect answers for %s records has been incremented and updated.", cursor.rowcount)
