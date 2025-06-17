@@ -20,7 +20,8 @@
             ],
             "settings": {
                 "python.defaultInterpreterPath": "/workspace/backend/.venv/bin/python",
-                "python.venvPath": "/workspace/backend/.venv"
+                "python.venvPath": "/workspace/backend/.venv",
+                "biome.lsp.bin": "/workspace/frontend/node_modules/.bin/biome"
             }
         }
     }

@@ -17,6 +17,9 @@
         "modelcontextprotocol",
         "dotenv",
         "levelname",
-        "psql"
+        "psql",
+        "xlink",
+        "iconify",
+        "Avenir"
     ]
 }
