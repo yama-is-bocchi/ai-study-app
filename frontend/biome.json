@@ -13,14 +13,10 @@
         "indentStyle": "tab"
     },
     "linter": {
-        "enabled": true,
         "rules": {
-            "recommended": true
-        }
-    },
-    "javascript": {
-        "formatter": {
-            "quoteStyle": "double"
+            "nursery": {
+                "useSortedClasses": "error"
+            }
         }
     },
     "assist": {
@@ -28,7 +24,8 @@
         "actions": {
             "source": {
                 "organizeImports": "on"
-            }
+            },
+            "recommended": true
         }
     }
 }
