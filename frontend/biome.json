@@ -13,6 +13,7 @@
         "indentStyle": "tab"
     },
     "linter": {
+        "enabled": true,
         "rules": {
             "nursery": {
                 "useSortedClasses": "error"

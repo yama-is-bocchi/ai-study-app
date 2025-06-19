@@ -1,7 +1,16 @@
+import { Button } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+
 export default function Home() {
 	return (
-		<div>
-			<h1>ホーム</h1>
-		</div>
+		<Button
+			onClick={() =>
+				notifications.show({
+					title: "Default notification",
+				})
+			}
+		>
+			Show notification
+		</Button>
 	);
 }
