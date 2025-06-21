@@ -1,0 +1,1 @@
+export const TIMEOUT_INTERVAL = 300000;

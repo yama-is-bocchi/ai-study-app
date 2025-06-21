@@ -17,6 +17,7 @@
     "@mantine/notifications": "^8.1.1",
     "@react-spring/web": "^10.0.1",
     "@tabler/icons-react": "^3.34.0",
+    "ky": "^1.8.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2"

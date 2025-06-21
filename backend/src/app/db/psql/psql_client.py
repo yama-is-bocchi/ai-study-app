@@ -6,7 +6,7 @@ from util import get_logger
 
 from .queries import (
     CREATE_ANSWER_TABLE,
-    CREATE_FILED_TABLE,
+    CREATE_FIELD_TABLE,
     INCREMENT_FIELDS_CORRECT,
     INCREMENT_FIELDS_INCORRECT,
     INSERT_ANSWER_RECORD,
@@ -27,13 +27,13 @@ class PsqlClient:
         """field_table,answer_tableが存在しない場合は作成する."""
         with self._connection.cursor() as cursor:
             # 外部キー制約により、順番は変えてはいけない
-            # CREATE_FILED_TABLE -> CREATE_ANSWER_TABLE
-            cursor.execute(CREATE_FILED_TABLE)
+            # CREATE_FIELD_TABLE -> CREATE_ANSWER_TABLE
+            cursor.execute(CREATE_FIELD_TABLE)
             cursor.execute(CREATE_ANSWER_TABLE)
         self._connection.commit()
         logger.info("Successfully created tables and committed.")
 
-    def insert_filed_record(self, field_list: list[str]) -> None:
+    def insert_field_record(self, field_list: list[str]) -> None:
         """引数のリストをfield_tableのレコードに追加する."""
         # リストが空なら早期リターン
         if not field_list:

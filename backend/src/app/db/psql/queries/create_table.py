@@ -1,4 +1,4 @@
-CREATE_FILED_TABLE = """
+CREATE_FIELD_TABLE = """
 CREATE TABLE IF NOT EXISTS field_table (
     name TEXT PRIMARY KEY,
     correct_number INTEGER,

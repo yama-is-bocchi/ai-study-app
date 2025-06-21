@@ -11,8 +11,7 @@ export default function Home() {
 					left: 0,
 					backgroundColor: "white",
 				}}
-			>
-			</Box>
+			></Box>
 			<YesMan
 				state="normal"
 				messages={[

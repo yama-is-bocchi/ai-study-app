@@ -28,7 +28,7 @@ class App:
         self._psql_client.create_tables()
         # 分野別情報を取得してレコードを書き込む
         field_list = load_field_file(config.field_config_file_path)
-        self._psql_client.insert_filed_record(field_list)
+        self._psql_client.insert_field_record(field_list)
         # 既に追加されているフィールドも取得できるようにする
         self._field_list = self._psql_client.get_field_list()
         logger.info("Successful create application")
