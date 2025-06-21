@@ -1,9 +1,9 @@
 # AI-Study-App
 LLMによる課題生成アプリ
 
-# 環境構築
+# 開発環境の構築
 ## サーバーの起動
-1. 開発コンテナを開いてください
+1. devcontainerを開いてください
 2. `.env.example`を参考に設定後、環境変数を公開してください。
     ```
     export $(cat .env | xargs)
@@ -34,6 +34,15 @@ LLMによる課題生成アプリ
     }
     ```
 5. `backend/data/conf/system_prompt.md` にシステムプロンプトを設定してください。
+6. `uv run src/main.py` でサーバーを起動できます。
+
+## UIの開発
+1. `cd frontend` で移動。
+2. `bun install` でnode_modulesを追加してください。
+3. `bun run dev` で開発を開始できます。
+### biome の豆知識
+- `frontend/biome.json`に各設定項目が載っています。
+- `shift` + `alt` + `o` でorganize import を実行する。
 
 ## PostgreSQL
 データベースとの接続は `psql` コマンドを利用します。
