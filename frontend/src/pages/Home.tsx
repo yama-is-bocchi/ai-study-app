@@ -1,5 +1,6 @@
 import { Box } from "@mantine/core";
 import { TopTab } from "./../lib/components/TopTab";
+import { YesMan } from "./../lib/components/YesMan";
 
 export default function Home() {
 	return (
@@ -14,6 +15,13 @@ export default function Home() {
 			>
 				<TopTab />
 			</Box>
+			<YesMan
+				state="normal"
+				messages={[
+					"ボクは君の頼れるお手伝いロボットさっ！",
+					"上のタブから使いたいモードをポチッと選んでくれると、とっても嬉しいな～！",
+				]}
+			/>
 		</div>
 	);
 }
