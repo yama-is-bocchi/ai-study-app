@@ -1,0 +1,21 @@
+import { Box } from "@mantine/core";
+import { Outlet } from "react-router-dom";
+import { TopTab } from "./../../components/TopTab";
+
+export function Layout() {
+	return (
+		<div>
+			<Box
+				style={{
+					position: "fixed",
+					top: 0,
+					left: 0,
+					backgroundColor: "white",
+				}}
+			>
+				<TopTab />
+			</Box>
+			<Outlet />
+		</div>
+	);
+}

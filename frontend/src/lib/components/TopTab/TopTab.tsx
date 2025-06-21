@@ -8,10 +8,11 @@ import {
 	IconRobot,
 } from "@tabler/icons-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function TopTab() {
 	const [tabsVisible, setTabsVisible] = useState(true);
-
+	const navigate = useNavigate();
 	return (
 		<Tabs
 			style={{
@@ -26,6 +27,9 @@ export function TopTab() {
 					value="AI Mode"
 					style={{ display: tabsVisible ? "" : "none" }}
 					leftSection={<IconRobot size={24} />}
+					onClick={() => {
+						navigate("/ai");
+					}}
 				>
 					AI Mode
 				</Tabs.Tab>

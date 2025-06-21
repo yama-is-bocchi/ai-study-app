@@ -1,5 +1,4 @@
 import { Box } from "@mantine/core";
-import { TopTab } from "./../lib/components/TopTab";
 import { YesMan } from "./../lib/components/YesMan";
 
 export default function Home() {
@@ -13,7 +12,6 @@ export default function Home() {
 					backgroundColor: "white",
 				}}
 			>
-				<TopTab />
 			</Box>
 			<YesMan
 				state="normal"
