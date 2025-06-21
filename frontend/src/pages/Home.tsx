@@ -1,16 +1,19 @@
-import { Button } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
+import { Box } from "@mantine/core";
+import { TopTab } from "./../lib/components/TopTab";
 
 export default function Home() {
 	return (
-		<Button
-			onClick={() =>
-				notifications.show({
-					title: "Default notification",
-				})
-			}
-		>
-			Show notification
-		</Button>
+		<div>
+			<Box
+				style={{
+					position: "fixed",
+					top: 0,
+					left: 0,
+					backgroundColor: "white",
+				}}
+			>
+				<TopTab />
+			</Box>
+		</div>
 	);
 }
