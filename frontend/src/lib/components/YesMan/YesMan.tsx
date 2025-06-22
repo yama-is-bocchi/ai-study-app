@@ -1,13 +1,14 @@
-import { Box } from "@mantine/core";
+import { Box, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import yesman from "./../../../assets/yesman.png";
 import yesmanGood from "./../../../assets/yesman-good.png";
 
-type YesManState = "good" | "normal";
+type YesManState = "good" | "normal" | "question";
 
 const yesmanImages: Record<YesManState, string> = {
 	good: yesmanGood,
 	normal: yesman,
+	question: yesman,
 };
 
 interface YesManProps {
@@ -46,25 +47,35 @@ export function YesMan({ state, messages }: YesManProps) {
 
 	return (
 		<div>
-			<Box>
-				<img src={yesmanImages[state]} alt={`yesman-${state}`} width={350} />
+			<Box style={{ textAlign: state === "question" ? "left" : "center" }}>
+				<img
+					src={yesmanImages[state]}
+					alt={`yesman-${state}`}
+					width={state === "question" ? 100 : 350}
+				/>
 			</Box>
-
 			<Box
 				style={{
 					position: "relative",
-					backgroundColor: "#f1f1f1",
+					backgroundColor: "#000000",
 					padding: "16px",
 					borderRadius: "16px",
 					textAlign: "center",
-					boxShadow: "2px 2px 6px rgba(0, 0, 0, 0.1)",
+					boxShadow: "0 0 12px #00ff00, inset 0 0 6px #00ff00",
+					color: "#00ff00",
+					textShadow: "0 0 2px #00ff00",
+					fontFamily: "monospace",
 				}}
 			>
 				<div>
 					{displayedMessages.map((message, index) => (
-						<h5 key={message + index.toString()} style={{ margin: "0 0 8px" }}>
+						<Text
+							key={message + index.toString()}
+							size={state === "question" ? "lg" : "md"}
+							style={{ marginBottom: 8 }}
+						>
 							{message}
-						</h5>
+						</Text>
 					))}
 				</div>
 			</Box>

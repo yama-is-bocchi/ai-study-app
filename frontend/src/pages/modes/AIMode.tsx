@@ -1,3 +1,4 @@
+import { Box } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useCallback, useEffect, useState } from "react";
 import { YesMan } from "../../lib/components/YesMan";
@@ -25,7 +26,6 @@ export default function AIMode() {
 
 	useEffect(() => {
 		refreshQuestions();
-		// TODO:無限ループ
 	}, [refreshQuestions]);
 	return (
 		<div>
@@ -38,9 +38,24 @@ export default function AIMode() {
 					]}
 				/>
 			) : (
-				<div>
-					{questions ? questions.map((question) => <>{question}</>) : ""}
-				</div>
+				questions.map((question, index) => (
+					<>
+						{index === 0 ? (
+							<>
+								<Box>
+									<YesMan
+										key={question + index.toString()}
+										state="question"
+										messages={[question.question]}
+									/>
+								</Box>
+								<h2 key={question + index.toString()}>{question.answer}</h2>
+							</>
+						) : (
+							<h2 key={question + index.toString()}>{question.answer}</h2>
+						)}
+					</>
+				))
 			)}
 		</div>
 	);

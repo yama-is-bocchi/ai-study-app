@@ -60,6 +60,7 @@ class App:
         # 問題のセットが4つ出来るまで繰り返す
         generated_questions: list[GeneratedQuestion] = []
         while len(generated_questions) < question_sum:
+            # TODO:類似した回答を生成させる
             # 問題生成用のプロンプトを生成
             # 直前に回答した問題,現在生成している問題を付け加える
             question_prompt, question_input = self._prompt_generator.generate_question_prompt(
