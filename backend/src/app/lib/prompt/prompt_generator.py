@@ -3,7 +3,7 @@ from typing import Any
 
 from langchain_core.prompts import PromptTemplate
 
-from app.db.model import Question
+from app.db.model import GeneratedQuestion, Question
 from util import get_func_name, get_logger
 
 logger = get_logger(__name__)
@@ -92,3 +92,24 @@ questionの例:
         )
         logger.info("Created prompt's template and input via: %s()", get_func_name())
         return (prompt, {"field_list": field_list, "questions": questions, "report": report})
+
+    def generate_dummy_answer_prompt(self, question: GeneratedQuestion, limit: int = 3) -> tuple[PromptTemplate, dict[str, Any]]:
+        """ダミー回答を取得するプロンプトを生成する."""
+        prompt = PromptTemplate(
+            input_variables=["limit", "question", "right_answer"],
+            template="""
+# Task
+あなたは不正解の回答ジェネレーターです。
+与えられている問題文と正しい回答を参考にして、不正解の回答を{limit}個生成してください。
+
+---
+問題文:
+{question}
+
+正しい回答:
+{right_answer}
+
+""",
+        )
+        logger.info("Created prompt's template and input via: %s()", get_func_name())
+        return (prompt, {"limit": limit, "question": question.question, "right_answer": question.answer})

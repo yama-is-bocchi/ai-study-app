@@ -13,7 +13,7 @@ question_api_router = APIRouter()
 async def get_question(
     context: Annotated[AppContext, Depends(get_app_context)],
     mode: Annotated[QuestionMode, Query(...)],
-) -> list:
+) -> list | dict:
     """問題を取得する."""
     match mode:
         case QuestionMode.ai:

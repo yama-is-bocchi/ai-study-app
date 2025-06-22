@@ -1,3 +1,3 @@
-from .model import FileInfo, GeneratedQuestion, Question
+from .model import DummyAnswers, FileInfo, GeneratedQuestion, Question
 
-__all__ = ["FileInfo", "GeneratedQuestion", "Question"]
+__all__ = ["DummyAnswers", "FileInfo", "GeneratedQuestion", "Question"]

@@ -17,6 +17,10 @@ class GeneratedQuestion(BaseModel):
     answer: str = Field(description="生成した問題に対する回答", strict=True)
 
 
+class DummyAnswers(BaseModel):
+    dummy_answers: list[str]
+
+
 class FileInfo(BaseModel):
     name: str
     data: str
