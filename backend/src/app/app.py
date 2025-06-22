@@ -11,7 +11,7 @@ from util import get_logger
 from .config import Config
 from .db import PsqlClient, StorageClient
 from .db.file.loader import load_field_file
-from .db.model import DummyAnswers, FileInfo, GeneratedQuestion, Question
+from .db.model import DummyAnswers, FileInfo, GeneratedQuestion, Question, ReportCache
 from .lib.prompt import PromptGenerator
 
 logger = get_logger(__name__)
@@ -20,12 +20,15 @@ logger = get_logger(__name__)
 class App:
     """DB操作,エージェントを利用したアプリケーションを提供する."""
 
+    _cache_limit = 15
+
     def __init__(self, config: Config) -> None:
         # psqlクライアントを追加
         self._analysis_agent = config.analysis_agent
         self._prompt_generator = PromptGenerator()
         self._psql_client = PsqlClient(f"host={config.postgres_host_name} dbname={config.postgres_user} user={config.postgres_user} password={config.postgres_password}")
         self._storage_client = StorageClient(config.storage_path)
+        self._report_cache_file_name = config.storage_reports_cache_file_name
         self._psql_client.create_tables()
         # 分野別情報を取得してレコードを書き込む
         field_list = load_field_file(config.field_config_file_path)
@@ -38,30 +41,33 @@ class App:
         """回答データを参照して苦手傾向にある問題を生成する."""
         # プロンプトを作成するために回答データをディープリサーチする.
         now = datetime.datetime.now(ZoneInfo("Asia/Tokyo"))
-        # TODO キャッシュの判定
-        # 1.最近の回答傾向
-        #   - プロンプトを生成
-        history_report_prompt = self._prompt_generator.generate_report_prompt_from_history(now)
-        #   - エージェントにレポートを作成させる
-        # 2.分野別の正答率
-        #   - プロンプトを生成
-        field_report_prompt = self._prompt_generator.generate_report_prompt_from_field_list(self._field_list)
-        #   - エージェントにレポートを作成させる
-        logger.info("Requesting an analysis agent to create a report")
-        first_report, second_report = await asyncio.gather(
-            self._analysis_agent.chat(field_report_prompt),
-            self._analysis_agent.chat(history_report_prompt),
-        )
-        # 3.プロンプトをマージ
-        logger.info("Merging reported prompts")
-        merged_prompt = self._analysis_agent.merge_report(first_report, second_report)
-        # TODO レポートのキャッシュ化
+        report = self._storage_client.read_json_file(self._report_cache_file_name, ReportCache)
+        current_answer_sum = self._psql_client.get_answered_sum()
+        if self._psql_client.get_answered_sum() - report.answer_count > self._cache_limit:
+            # 1.最近の回答傾向
+            #   - プロンプトを生成
+            history_report_prompt = self._prompt_generator.generate_report_prompt_from_history(now)
+            #   - エージェントにレポートを作成させる
+            # 2.分野別の正答率
+            #   - プロンプトを生成
+            field_report_prompt = self._prompt_generator.generate_report_prompt_from_field_list(self._field_list)
+            #   - エージェントにレポートを作成させる
+            logger.info("Requesting an analysis agent to create a report")
+            first_report, second_report = await asyncio.gather(
+                self._analysis_agent.chat(field_report_prompt),
+                self._analysis_agent.chat(history_report_prompt),
+            )
+            # 3.プロンプトをマージ
+            logger.info("Merging reported prompts")
+            merged_prompt = self._analysis_agent.merge_report(first_report, second_report)
+            report = ReportCache(answer_count=current_answer_sum, report=merged_prompt)
+            self._storage_client.save_file(self._report_cache_file_name, report.model_dump_json().encode("utf-8"))
         # 直前に回答した問題
         recent_questions = self._psql_client.get_answered_data(8)
         logger.info("%d responses were obtained", len(recent_questions))
 
         question_prompt, question_input = self._prompt_generator.generate_question_prompt(
-            merged_prompt,
+            report.report,
             self._field_list,
             *recent_questions,
         )

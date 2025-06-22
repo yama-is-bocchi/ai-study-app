@@ -12,6 +12,7 @@ from .queries import (
     INSERT_ANSWER_RECORD,
     INSERT_FIELD_RECORD,
     SELECT_ANSWER_TABLE_BY_LIMIT,
+    SELECT_COUNTS_ANSWER,
     SELECT_NAME_FROM_FIELD_TABLE,
 )
 
@@ -102,3 +103,10 @@ class PsqlClient:
             cursor.execute(INCREMENT_FIELDS_INCORRECT, (field_name,))
             self._connection.commit()
             logger.info("The number of incorrect answers for %s records has been incremented and updated.", cursor.rowcount)
+
+    def get_answered_sum(self) -> int:
+        """回答データの総数を取得する."""
+        with self._connection.cursor() as cursor:
+            cursor.execute(SELECT_COUNTS_ANSWER)
+            result = cursor.fetchone()
+            return result[0] if result else 0

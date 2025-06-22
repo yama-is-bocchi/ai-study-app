@@ -19,8 +19,3 @@ class GeneratedQuestion(BaseModel):
 
 class DummyAnswers(BaseModel):
     dummy_answers: list[str]
-
-
-class FileInfo(BaseModel):
-    name: str
-    data: str

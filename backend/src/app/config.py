@@ -12,6 +12,7 @@ SYSTEM_PROMPT_PATH = "data/conf/system_prompt.md"
 FIELD_FILE_PATH = "data/conf/.fields"
 MCP_CONFIG_FILE_PATH = "data/conf/mcp_config.json"
 STORAGE_PATH = "data/memo"
+STORAGE_REPORT_CACHE_FILE_NAME = "report_cache.json"
 
 
 @dataclass
@@ -23,6 +24,7 @@ class Config:
     analysis_agent: AnalysisAgent
     field_config_file_path: str = FIELD_FILE_PATH
     storage_path: str = STORAGE_PATH
+    storage_reports_cache_file_name: str = STORAGE_REPORT_CACHE_FILE_NAME
 
 
 class ConfigLoader:
