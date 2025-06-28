@@ -3,3 +3,8 @@ export type Question = {
 	question: string;
 	answer: string;
 };
+
+export type OutputQuestion = {
+	question: Question;
+	dummy_answer: string[];
+};

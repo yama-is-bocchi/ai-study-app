@@ -1,26 +1,37 @@
+import type { KyResponse } from "ky";
 import { useCallback, useState } from "react";
-import { getQuestions } from "../../api/question";
-import type { Question } from "../../models/questions";
+import { getQuestions, postAnswer } from "../../api/question";
+import type { OutputQuestion, Question } from "../../models/question";
 
 export function useQuestionAPI(): [
 	boolean,
 	{
-		getQuestion: (mode: "ai" | "random") => Promise<Question[]>;
+		getQuestion: (mode: "ai" | "random") => Promise<OutputQuestion>;
+		registerAnswer: (question: Question) => Promise<KyResponse>;
 	},
 ] {
 	const [loading, setLoading] = useState(false);
 
 	// 問題取得
 	const getQuestion = useCallback(
-		(mode: "ai" | "random"): Promise<Question[]> => {
+		(mode: "ai" | "random"): Promise<OutputQuestion> => {
 			setLoading(true);
 			return getQuestions(mode)
-				.then((response) => response.json<Question[]>())
+				.then((response) => response.json<OutputQuestion>())
 				.finally(() => {
 					setLoading(false);
 				});
 		},
 		[],
 	);
-	return [loading, { getQuestion }] as const;
+	const registerAnswer = useCallback(
+		(question: Question): Promise<KyResponse> => {
+			setLoading(true);
+			return postAnswer(question).finally(() => {
+				setLoading(false);
+			});
+		},
+		[],
+	);
+	return [loading, { getQuestion, registerAnswer }] as const;
 }

@@ -3,16 +3,18 @@ import { notifications } from "@mantine/notifications";
 import { useCallback, useEffect, useState } from "react";
 import { YesMan } from "../../lib/components/YesMan";
 import { useQuestionAPI } from "../../lib/hooks/useQuestionAPI";
-import type { Question } from "../../lib/models/questions";
+import type { OutputQuestion } from "../../lib/models/question";
 
 export default function AIMode() {
 	const [loading, { getQuestion }] = useQuestionAPI();
-	const [questions, setQuestion] = useState<Question[] | undefined>(undefined);
+	const [outputQuestion, setOutputQuestion] = useState<
+		OutputQuestion | undefined
+	>(undefined);
 
 	const refreshQuestions = useCallback(() => {
 		getQuestion("ai")
 			.then((current_question) => {
-				setQuestion(current_question);
+				setOutputQuestion(current_question);
 			})
 			.catch((error) => {
 				console.error(`failed to send get request at ai mode question${error}`);
@@ -29,7 +31,7 @@ export default function AIMode() {
 	}, [refreshQuestions]);
 	return (
 		<div>
-			{loading || questions === undefined ? (
+			{loading || outputQuestion === undefined ? (
 				<YesMan
 					state="good"
 					messages={[
@@ -38,24 +40,14 @@ export default function AIMode() {
 					]}
 				/>
 			) : (
-				questions.map((question, index) => (
-					<>
-						{index === 0 ? (
-							<>
-								<Box>
-									<YesMan
-										key={question + index.toString()}
-										state="question"
-										messages={[question.question]}
-									/>
-								</Box>
-								<h2 key={question + index.toString()}>{question.answer}</h2>
-							</>
-						) : (
-							<h2 key={question + index.toString()}>{question.answer}</h2>
-						)}
-					</>
-				))
+				// TODO: 回答欄の割り当て方法を考察する.
+				<Box>
+					<YesMan
+						key={outputQuestion.question.answer}
+						state="question"
+						messages={[outputQuestion.question]}
+					/>
+				</Box>
 			)}
 		</div>
 	);
