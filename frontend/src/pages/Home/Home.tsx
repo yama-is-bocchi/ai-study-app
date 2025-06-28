@@ -1,5 +1,5 @@
 import { Box } from "@mantine/core";
-import { YesMan } from "./../lib/components/YesMan";
+import { YesMan } from "../../lib/components/YesMan";
 
 export default function Home() {
 	return (
