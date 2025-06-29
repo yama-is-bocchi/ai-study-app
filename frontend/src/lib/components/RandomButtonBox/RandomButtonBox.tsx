@@ -1,5 +1,5 @@
-import { Box, Button } from "@mantine/core";
-import { useMemo } from "react";
+import { Box, Button, Loader } from "@mantine/core";
+import { useEffect, useState } from "react";
 
 interface RandomButtonBoxProps {
 	answers: string[];
@@ -10,47 +10,54 @@ export function RandomButtonBox({
 	answers,
 	selectAnswerBehavior,
 }: RandomButtonBoxProps) {
-	const shuffledAnswers = useMemo(() => {
-		return [...answers].sort(() => Math.random() - 0.5);
+	const [shuffledAnswers, setShuffledAnswers] = useState<string[] | undefined>(
+		undefined,
+	);
+
+	useEffect(() => {
+		setShuffledAnswers([...answers].sort(() => Math.random() - 0.5));
 	}, [answers]);
 
-    // TODO: シャッフルされる前に一瞬表示される問題の解決
 	return (
 		<>
-			{shuffledAnswers.map((answer, index) => (
-				<Box
-					key={answer + index.toString()}
-					style={{
-						padding: "10px",
-						backgroundColor: "black",
-						color: "limegreen",
-					}}
-				>
-					<Button
-						fullWidth
-						leftSection={<>{(index + 1).toString()}.</>}
+			{shuffledAnswers ? (
+				shuffledAnswers.map((answer, index) => (
+					<Box
 						key={answer + index.toString()}
-						onClick={() => {
-							selectAnswerBehavior(answer);
-						}}
 						style={{
+							padding: "10px",
 							backgroundColor: "black",
 							color: "limegreen",
 						}}
-						styles={{
-							root: {
-								"&:hover": {
-									backgroundColor: "#222",
-									transform: "scale(1.03)",
-									transition: "all 0.2s ease-in-out",
-								},
-							},
-						}}
 					>
-						{answer}
-					</Button>
-				</Box>
-			))}
+						<Button
+							fullWidth
+							leftSection={<>{(index + 1).toString()}.</>}
+							key={answer + index.toString()}
+							onClick={() => {
+								selectAnswerBehavior(answer);
+							}}
+							style={{
+								backgroundColor: "black",
+								color: "limegreen",
+							}}
+							styles={{
+								root: {
+									"&:hover": {
+										backgroundColor: "#222",
+										transform: "scale(1.03)",
+										transition: "all 0.2s ease-in-out",
+									},
+								},
+							}}
+						>
+							{answer}
+						</Button>
+					</Box>
+				))
+			) : (
+				<Loader />
+			)}
 		</>
 	);
 }
