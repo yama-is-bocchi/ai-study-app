@@ -1,3 +1,4 @@
+import { notifications } from "@mantine/notifications";
 import type { KyResponse } from "ky";
 import { useCallback, useState } from "react";
 import { getQuestions, postAnswer } from "../../api/question";
@@ -21,6 +22,14 @@ export function useQuestionAPI(): [
 			setLoading(true);
 			return getQuestions(mode)
 				.then((response) => response.json<OutputQuestion>())
+				.catch((error) => {
+					console.error(`failed  to fetch questions in ${mode} mode: ${error}`);
+					notifications.show({
+						color: "red",
+						title: "サーバーエラー",
+						message: `${mode}モードでの問題の取得が失敗しました${error}`,
+					});
+				})
 				.finally(() => {
 					setLoading(false);
 				});
@@ -30,9 +39,18 @@ export function useQuestionAPI(): [
 	const registerAnswer = useCallback(
 		(question: Question, isCorrect: boolean): Promise<KyResponse> => {
 			setLoading(true);
-			return postAnswer(question, isCorrect).finally(() => {
-				setLoading(false);
-			});
+			return postAnswer(question, isCorrect)
+				.catch((error) => {
+					console.error(`failed to post answer data: ${error}`);
+					notifications.show({
+						color: "red",
+						title: "サーバーエラー",
+						message: `回答データの送信が失敗しました${error}`,
+					});
+				})
+				.finally(() => {
+					setLoading(false);
+				});
 		},
 		[],
 	);

@@ -1,6 +1,6 @@
-import { Box } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
+import { Box, Stack } from "@mantine/core";
 import { useCallback, useEffect, useState } from "react";
+import { AnswerForm } from "../../lib/components/AnswerForm";
 import { RandomButtonBox } from "../../lib/components/RandomButtonBox";
 import { YesMan } from "../../lib/components/YesMan";
 import { useQuestionAPI } from "../../lib/hooks/useQuestionAPI";
@@ -18,20 +18,12 @@ export default function AIMode() {
 		  }
 		| undefined
 	>(undefined);
+	const [selectedAnswer, setSelectedAnswer] = useState("");
 
 	const refreshQuestions = useCallback(() => {
-		getQuestion("ai")
-			.then((current_question) => {
-				setOutputQuestion(current_question);
-			})
-			.catch((error) => {
-				console.error(`failed to send get request at ai mode question${error}`);
-				notifications.show({
-					color: "red",
-					title: "サーバーエラー",
-					message: `サーバーへのリクエストが失敗しました${error}`,
-				});
-			});
+		getQuestion("ai").then((current_question) => {
+			setOutputQuestion(current_question);
+		});
 	}, [getQuestion]);
 
 	useEffect(() => {
@@ -47,38 +39,44 @@ export default function AIMode() {
 						"すぐ終わるから、そのままワクワクして待っててねっ！🔍",
 					]}
 				/>
-			) : answeredQuestionData === undefined ? (
-				<>
-					<Box style={{ padding: "10px" }}>
+			) : (
+				<Stack spacing="sm" p="10px">
+					<Box>
 						<YesMan
 							key={outputQuestion.question.answer}
 							state="question"
 							messages={[outputQuestion.question.question]}
 						/>
 					</Box>
-					<Box>
-						<RandomButtonBox
-							answers={[
-								outputQuestion.question.answer,
-								...outputQuestion.dummy_answers,
-							]}
-							selectAnswerBehavior={(current_answer) => {
-								setAnsweredQuestionData({
-									answered: true,
-									question: outputQuestion.question,
-								});
-								// 回答データの送信
-								registerAnswer(
-									outputQuestion.question,
-									current_answer === outputQuestion.question.answer,
-								);
-							}}
+					{answeredQuestionData === undefined ? (
+						<Box>
+							<RandomButtonBox
+								answers={[
+									outputQuestion.question.answer,
+									...outputQuestion.dummy_answers,
+								]}
+								selectAnswerBehavior={(current_answer) => {
+									setSelectedAnswer(current_answer);
+									setAnsweredQuestionData({
+										answered: true,
+										question: outputQuestion.question,
+									});
+									// 回答データの送信
+									registerAnswer(
+										outputQuestion.question,
+										current_answer === outputQuestion.question.answer,
+									);
+								}}
+							/>
+						</Box>
+					) : (
+						<AnswerForm
+							selectedAnswer={selectedAnswer}
+							question={outputQuestion.question}
+							clickNextBehavior={() => {}}
 						/>
-					</Box>
-				</>
-			) : (
-				// TODO:解説依頼
-				<></>
+					)}
+				</Stack>
 			)}
 		</div>
 	);
