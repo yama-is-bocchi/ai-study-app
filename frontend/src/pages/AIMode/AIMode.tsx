@@ -4,12 +4,19 @@ import { useCallback, useEffect, useState } from "react";
 import { RandomButtonBox } from "../../lib/components/RandomButtonBox";
 import { YesMan } from "../../lib/components/YesMan";
 import { useQuestionAPI } from "../../lib/hooks/useQuestionAPI";
-import type { OutputQuestion } from "../../lib/models/question";
+import type { OutputQuestion, Question } from "../../lib/models/question";
 
 export default function AIMode() {
 	const [loading, { getQuestion }] = useQuestionAPI();
 	const [outputQuestion, setOutputQuestion] = useState<
 		OutputQuestion | undefined
+	>(undefined);
+	const [answeredQuestionData, setAnsweredQuestionData] = useState<
+		| {
+				answered: boolean;
+				question: Question;
+		  }
+		| undefined
 	>(undefined);
 
 	const refreshQuestions = useCallback(() => {
@@ -40,9 +47,9 @@ export default function AIMode() {
 						"すぐ終わるから、そのままワクワクして待っててねっ！🔍",
 					]}
 				/>
-			) : (
+			) : answeredQuestionData === undefined ? (
 				<>
-					<Box style>
+					<Box style={{padding:"10px"}}>
 						<YesMan
 							key={outputQuestion.question.answer}
 							state="question"
@@ -55,11 +62,18 @@ export default function AIMode() {
 								outputQuestion.question.answer,
 								...outputQuestion.dummy_answers,
 							]}
-							// TODO: 正解,不正解の振る舞いを作成
-							selectAnswerBehavior={() => {}}
+							selectAnswerBehavior={() => {
+								setAnsweredQuestionData({
+									answered: true,
+									question: outputQuestion.question,
+								});
+							}}
 						/>
 					</Box>
 				</>
+			) : (
+        // TODO:回答データの送信,解説依頼
+				<></>
 			)}
 		</div>
 	);
