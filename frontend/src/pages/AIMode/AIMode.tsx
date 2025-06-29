@@ -7,7 +7,7 @@ import { useQuestionAPI } from "../../lib/hooks/useQuestionAPI";
 import type { OutputQuestion, Question } from "../../lib/models/question";
 
 export default function AIMode() {
-	const [loading, { getQuestion }] = useQuestionAPI();
+	const [loading, { getQuestion, registerAnswer }] = useQuestionAPI();
 	const [outputQuestion, setOutputQuestion] = useState<
 		OutputQuestion | undefined
 	>(undefined);
@@ -49,7 +49,7 @@ export default function AIMode() {
 				/>
 			) : answeredQuestionData === undefined ? (
 				<>
-					<Box style={{padding:"10px"}}>
+					<Box style={{ padding: "10px" }}>
 						<YesMan
 							key={outputQuestion.question.answer}
 							state="question"
@@ -62,17 +62,22 @@ export default function AIMode() {
 								outputQuestion.question.answer,
 								...outputQuestion.dummy_answers,
 							]}
-							selectAnswerBehavior={() => {
+							selectAnswerBehavior={(current_answer) => {
 								setAnsweredQuestionData({
 									answered: true,
 									question: outputQuestion.question,
 								});
+								// 回答データの送信
+								registerAnswer(
+									outputQuestion.question,
+									current_answer === outputQuestion.question.answer,
+								);
 							}}
 						/>
 					</Box>
 				</>
 			) : (
-        // TODO:回答データの送信,解説依頼
+				// TODO:解説依頼
 				<></>
 			)}
 		</div>

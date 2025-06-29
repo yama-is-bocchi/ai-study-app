@@ -3,7 +3,7 @@ import { useMemo } from "react";
 
 interface RandomButtonBoxProps {
 	answers: string[];
-	selectAnswerBehavior: () => void;
+	selectAnswerBehavior: (current_answer: string) => void;
 }
 
 export function RandomButtonBox({
@@ -14,6 +14,7 @@ export function RandomButtonBox({
 		return [...answers].sort(() => Math.random() - 0.5);
 	}, [answers]);
 
+    // TODO: シャッフルされる前に一瞬表示される問題の解決
 	return (
 		<>
 			{shuffledAnswers.map((answer, index) => (
@@ -29,7 +30,9 @@ export function RandomButtonBox({
 						fullWidth
 						leftSection={<>{(index + 1).toString()}.</>}
 						key={answer + index.toString()}
-						onClick={selectAnswerBehavior}
+						onClick={() => {
+							selectAnswerBehavior(answer);
+						}}
 						style={{
 							backgroundColor: "black",
 							color: "limegreen",

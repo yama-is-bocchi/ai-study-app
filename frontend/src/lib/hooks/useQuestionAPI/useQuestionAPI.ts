@@ -7,7 +7,10 @@ export function useQuestionAPI(): [
 	boolean,
 	{
 		getQuestion: (mode: "ai" | "random") => Promise<OutputQuestion>;
-		registerAnswer: (question: Question) => Promise<KyResponse>;
+		registerAnswer: (
+			question: Question,
+			isCorrect: boolean,
+		) => Promise<KyResponse>;
 	},
 ] {
 	const [loading, setLoading] = useState(false);
@@ -25,9 +28,9 @@ export function useQuestionAPI(): [
 		[],
 	);
 	const registerAnswer = useCallback(
-		(question: Question): Promise<KyResponse> => {
+		(question: Question, isCorrect: boolean): Promise<KyResponse> => {
 			setLoading(true);
-			return postAnswer(question).finally(() => {
+			return postAnswer(question, isCorrect).finally(() => {
 				setLoading(false);
 			});
 		},

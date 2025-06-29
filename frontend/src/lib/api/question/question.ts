@@ -12,9 +12,15 @@ export function getQuestions(
 	});
 }
 
-export function postAnswer(question: Question): Promise<KyResponse> {
-	return ky.post("/api/v1/question", {
-		json: question,
+export function postAnswer(
+	question: Question,
+	isCorrect: boolean,
+): Promise<KyResponse> {
+	return ky.post("/api/v1/question/answer", {
+		json: {
+			...question,
+			correct: isCorrect,
+		},
 		timeout: TIMEOUT_INTERVAL,
 	});
 }
