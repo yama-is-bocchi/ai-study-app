@@ -11,7 +11,7 @@ logger = get_logger(__name__)
 
 class PromptGenerator:
     def __init__(self) -> None:
-        logger.info("Successful prompt generator")
+        logger.info("Successful initialize prompt generator")
 
     def generate_report_prompt_from_history(self, current_date: datetime.datetime) -> str:
         """「回答履歴からレポート作成するプロンプト」を生成する."""
@@ -113,3 +113,22 @@ questionの例:
         )
         logger.info("Created prompt's template and input via: %s()", get_func_name())
         return (prompt, {"limit": limit, "question": question.question, "right_answer": question.answer})
+
+    def generate_commentary_prompt(self, question: GeneratedQuestion) -> str:
+        """問題文と正解の解説を取得するためのプロンプトを生成する."""
+        prompt = PromptTemplate(
+            input_variables=["question", "answer"],
+            template="""
+# Task
+あなたは優秀な課題解説者です。
+持っている知識を利用して問題文の正解が何故こうなるのか、詳細に解説してください。
+---
+問題文:
+{question}
+正解:
+{answer}
+
+""",
+        )
+        logger.info("Created prompt via: %s()", get_func_name())
+        return prompt.format(question=question.question, answer=question.answer)

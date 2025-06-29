@@ -29,3 +29,9 @@ async def register_answer(request: Request, context: Annotated[AppContext, Depen
     """回答データをデータベースに登録する."""
     context.app.register_answer_to_psql(await request.body())
     return {"message": "answer data has been successfully registered"}
+
+
+@question_api_router.post("/commentary")
+async def get_commentary(request: Request, context: Annotated[AppContext, Depends(get_app_context)]) -> str:
+    """問題と回答の解説を取得する."""
+    return await context.app.get_commentary_from_question(await request.body())

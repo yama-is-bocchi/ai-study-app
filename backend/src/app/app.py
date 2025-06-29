@@ -1,10 +1,10 @@
 import asyncio
 import datetime
 import json
-from typing import Any
+from typing import Any, TypeVar
 from zoneinfo import ZoneInfo
 
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
 
 from util import get_logger
 
@@ -15,6 +15,7 @@ from .db.model import DummyAnswers, FileInfo, GeneratedQuestion, Question, Repor
 from .lib.prompt import PromptGenerator
 
 logger = get_logger(__name__)
+T = TypeVar("T", bound=BaseModel)
 
 
 class App:
@@ -127,10 +128,7 @@ class App:
 
     def register_answer_to_psql(self, raw_data: bytes) -> None:
         """バイト型のデータをパースしてPSQLのレコードに登録する."""
-        logger.info("Parsing raw bytes data")
-        # パースする
-        body_dict = json.loads(raw_data)
-        question = Question(**body_dict)
+        question = self._get_schema_from_bytes(Question, raw_data)
         # 解答履歴データに追加
         self._psql_client.insert_answer_record(question)
         # 正答率を更新
@@ -138,6 +136,12 @@ class App:
             self._psql_client.increment_correct(question.field_name)
             return
         self._psql_client.increment_incorrect(question.field_name)
+
+    async def get_commentary_from_question(self, raw_data: bytes) -> str:
+        """問題文と回答から解説を取得する."""
+        question = self._get_schema_from_bytes(GeneratedQuestion, raw_data)
+        prompt = self._prompt_generator.generate_commentary_prompt(question)
+        return await self._analysis_agent.chat(prompt)
 
     def upload_file(self, file_name: str, file_data: bytes) -> None:
         """ファイルデータをストレージに保存する."""
@@ -153,3 +157,10 @@ class App:
         """ストレージ内のファイルを削除する."""
         logger.info("Deleting %s in the storage...", file_name)
         return self._storage_client.delete_file(file_name)
+
+    def _get_schema_from_bytes(self, schema: type[T], raw_data: bytes) -> T:
+        """バイト列から引数のスキーマのデータを取得する."""
+        logger.info("Parsing raw bytes data")
+        # パースする
+        body_dict = json.loads(raw_data)
+        return schema(**body_dict)
