@@ -1,6 +1,7 @@
 import { Box } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useCallback, useEffect, useState } from "react";
+import { RandomButtonBox } from "../../lib/components/RandomButtonBox";
 import { YesMan } from "../../lib/components/YesMan";
 import { useQuestionAPI } from "../../lib/hooks/useQuestionAPI";
 import type { OutputQuestion } from "../../lib/models/question";
@@ -40,14 +41,25 @@ export default function AIMode() {
 					]}
 				/>
 			) : (
-				// TODO: 回答欄の割り当て方法を考察する.
-				<Box>
-					<YesMan
-						key={outputQuestion.question.answer}
-						state="question"
-						messages={[outputQuestion.question]}
-					/>
-				</Box>
+				<>
+					<Box style>
+						<YesMan
+							key={outputQuestion.question.answer}
+							state="question"
+							messages={[outputQuestion.question.question]}
+						/>
+					</Box>
+					<Box>
+						<RandomButtonBox
+							answers={[
+								outputQuestion.question.answer,
+								...outputQuestion.dummy_answers,
+							]}
+							// TODO: 正解,不正解の振る舞いを作成
+							selectAnswerBehavior={() => {}}
+						/>
+					</Box>
+				</>
 			)}
 		</div>
 	);

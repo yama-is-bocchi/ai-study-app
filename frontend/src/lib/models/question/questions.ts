@@ -6,5 +6,5 @@ export type Question = {
 
 export type OutputQuestion = {
 	question: Question;
-	dummy_answer: string[];
+	dummy_answers: string[];
 };
