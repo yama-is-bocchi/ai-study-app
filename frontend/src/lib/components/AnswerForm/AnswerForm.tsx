@@ -7,6 +7,7 @@ import {
 } from "@tabler/icons-react";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useQuestionAPI } from "../../hooks/useQuestionAPI";
 import type { Question } from "../../models/question";
 
@@ -89,7 +90,9 @@ export function AnswerForm({
 							{commentary.length > 0 ? (
 								<Text size="28px">解説</Text>
 							) : undefined}
-							<ReactMarkdown>{commentary}</ReactMarkdown>
+							<ReactMarkdown remarkPlugins={[remarkGfm]}>
+								{commentary}
+							</ReactMarkdown>
 						</Box>
 					</Box>
 					<Button
