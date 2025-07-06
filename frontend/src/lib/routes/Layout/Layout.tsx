@@ -11,6 +11,7 @@ export function Layout() {
 					top: 0,
 					left: 0,
 					backgroundColor: "white",
+					zIndex: 1000,
 				}}
 			>
 				<TopTab />

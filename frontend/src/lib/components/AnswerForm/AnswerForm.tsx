@@ -1,10 +1,14 @@
-import { Box, Button, Card, Stack, Text } from "@mantine/core";
+import { Box, Button, Card, Loader, Stack, Text } from "@mantine/core";
 import {
 	IconCircle,
 	IconMessageCircleSearch,
+	IconReportAnalytics,
 	IconStairsUp,
 	IconX,
 } from "@tabler/icons-react";
+import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import { useQuestionAPI } from "../../hooks/useQuestionAPI";
 import type { Question } from "../../models/question";
 
 interface AnswerFormProps {
@@ -18,6 +22,8 @@ export function AnswerForm({
 	question,
 	clickNextBehavior,
 }: AnswerFormProps) {
+	const [loading, { getCommentary }] = useQuestionAPI();
+	const [commentary, setCommentary] = useState("");
 	return (
 		<Card
 			style={{
@@ -46,7 +52,14 @@ export function AnswerForm({
 								position: "absolute",
 								top: "10px",
 								left: "10px",
-							}} //TODO: 解説リクエスト
+							}}
+							onClick={() => {
+								setCommentary("");
+								getCommentary(question).then((comment) => {
+									setCommentary(comment);
+								});
+							}}
+							disabled={loading}
 						>
 							解説
 						</Button>
@@ -59,7 +72,32 @@ export function AnswerForm({
 					</>
 				)}
 				<Box>
-					<Button rightSection={<IconStairsUp />} onClick={clickNextBehavior}>
+					<Box
+						style={
+							commentary.length > 0
+								? {
+										padding: "20px",
+										backgroundColor: "#f9f9f9",
+										borderRadius: "8px",
+										border: "1px solid #ddd",
+										boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+									}
+								: undefined
+						}
+					>
+						{loading ? <Loader /> : undefined}
+						<Box style={{ textAlign: "left" }}>
+							{commentary.length > 0 ? (
+								<Text size="28px">解説</Text>
+							) : undefined}
+							<ReactMarkdown>{commentary}</ReactMarkdown>
+						</Box>
+					</Box>
+					<Button
+						style={{ marginTop: "10px" }}
+						rightSection={<IconStairsUp />}
+						onClick={clickNextBehavior}
+					>
 						次の問題
 					</Button>
 				</Box>

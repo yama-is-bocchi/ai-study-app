@@ -83,13 +83,13 @@ class App:
                 logger.info("Requesting LLM to dummy answers")
                 dummy_answers = self._analysis_agent.get_scheme_by_chain(dummy_question_prompt, dummy_question_input, DummyAnswers)
                 if len(dummy_answers.dummy_answers) >= question_sum - 1:
-                    logger.info("Generated dummy answers: %s", dummy_answers.dummy_answers[:3])
+                    logger.info("Generated dummy answers: %s", dummy_answers.dummy_answers[: question_sum - 1])
                     break
                 logger.info("Invalid dummy answer was printed: %s", dummy_answers.dummy_answers)
         except ValidationError:
             logger.exception("Failed to get scheme by chain Answers")
 
-        return {"question": target_question, "dummy_answers": dummy_answers.dummy_answers[:3]}
+        return {"question": target_question, "dummy_answers": dummy_answers.dummy_answers[: question_sum - 1]}
 
     def get_random_questions(self, question_sum: int = 4) -> dict[str, Any]:
         """回答データを参照してランダムに問題を生成する."""
@@ -113,13 +113,13 @@ class App:
                 logger.info("Requesting LLM to dummy answers")
                 dummy_answers = self._analysis_agent.get_scheme_by_chain(dummy_question_prompt, dummy_question_input, DummyAnswers)
                 if len(dummy_answers.dummy_answers) >= question_sum - 1:
-                    logger.info("Generated dummy answers: %s", dummy_answers.dummy_answers[:3])
+                    logger.info("Generated dummy answers: %s", dummy_answers.dummy_answers[: question_sum - 1])
                     break
                 logger.info("Invalid dummy answer was printed: %s", dummy_answers.dummy_answers)
         except ValidationError:
             logger.exception("Failed to get scheme by chain Answers")
 
-        return {"question": target_question, "dummy_answers": dummy_answers.dummy_answers[:3]}
+        return {"question": target_question, "dummy_answers": dummy_answers.dummy_answers[: question_sum - 1]}
 
     def get_incorrect_answers(self, max_limit: int) -> list[Question]:
         """誤答一覧を取得する."""
