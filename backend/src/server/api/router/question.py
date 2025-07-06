@@ -6,7 +6,7 @@ from app import AppContext, get_app_context
 from server.api.lib.params.api_parameter import QuestionMode
 
 question_api_router = APIRouter()
-"""REST APIのエンドポイントを定義"""
+"""課題のREST APIのエンドポイントを定義"""
 
 
 @question_api_router.get("/")
@@ -16,8 +16,15 @@ async def get_question(
 ) -> list | dict:
     """問題を取得する."""
     match mode:
-        case QuestionMode.ai:
-            return await context.app.get_analysis_question()
+        case QuestionMode.ai:  # TODO: 解析出力に切り替える
+            return {
+                "question": {
+                    "field_name": "ネットワークセキュリティ",
+                    "question": "ファイアウォールの主な目的は何ですか？",
+                    "answer": "不正なアクセスを防ぐために、ネットワークトラフィックを制御すること。",
+                },
+                "dummy_answers": ["ネットワーク上のすべての通信を暗号化すること。", "ユーザーのパスワードを管理すること。", "ネットワークの速度を向上させること。"],
+            }
         case QuestionMode.random:
             return context.app.get_random_questions()
         case QuestionMode.incorrect:

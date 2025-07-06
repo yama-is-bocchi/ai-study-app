@@ -73,7 +73,7 @@ export default function AIMode() {
 						<AnswerForm
 							selectedAnswer={selectedAnswer}
 							question={outputQuestion.question}
-							clickNextBehavior={() => {}}
+							clickNextBehavior={() => {}} // TODO: 次の問題を取得
 						/>
 					)}
 				</Stack>

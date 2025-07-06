@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Request
 from app import AppContext, get_app_context
 
 storage_api_router = APIRouter()
-"""REST APIのエンドポイントを定義"""
+"""DB操作のREST APIのエンドポイントを定義"""
 
 
 @storage_api_router.put("/{file_name}")
