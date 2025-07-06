@@ -1,11 +1,11 @@
 import { Tabs } from "@mantine/core";
 import {
-  IconBubbleText,
-  IconChevronCompactLeft,
-  IconChevronCompactRight,
-  IconLibrary,
-  IconPencilX,
-  IconRobot,
+	IconBubbleText,
+	IconChevronCompactLeft,
+	IconChevronCompactRight,
+	IconLibrary,
+	IconPencilX,
+	IconRobot,
 } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -37,6 +37,9 @@ export function TopTab() {
 					value="Normal Mode"
 					style={{ display: tabsVisible ? "" : "none" }}
 					leftSection={<IconLibrary size={24} />}
+					onClick={() => {
+						navigate("/normal");
+					}}
 				>
 					Normal Mode
 				</Tabs.Tab>

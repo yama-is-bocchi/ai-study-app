@@ -6,7 +6,7 @@ import { YesMan } from "../../lib/components/YesMan";
 import { useQuestionAPI } from "../../lib/hooks/useQuestionAPI";
 import type { OutputQuestion, Question } from "../../lib/models/question";
 
-export function AIMode() {
+export function NormalMode() {
 	const [loading, { getQuestion, registerAnswer }] = useQuestionAPI();
 	const [outputQuestion, setOutputQuestion] = useState<
 		OutputQuestion | undefined
@@ -21,7 +21,7 @@ export function AIMode() {
 	const [selectedAnswer, setSelectedAnswer] = useState("");
 
 	const refreshQuestions = useCallback(() => {
-		getQuestion("ai").then((current_question) => {
+		getQuestion("random").then((current_question) => {
 			setOutputQuestion(current_question);
 		});
 	}, [getQuestion]);
@@ -33,10 +33,10 @@ export function AIMode() {
 		<div>
 			{loading || outputQuestion === undefined ? (
 				<YesMan
-					state="loader"
+					state="loadFace"
 					messages={[
-						"うーん、ちょっと待ってねっ！ボクが今、一生懸命データを読み取ってるところなんだ～！",
-						"すぐ終わるから、そのままワクワクして待っててねっ！🔍",
+						"フフフ、何が出るかはボクにもわかんないよっ！でも、きっと楽しいはず～！",
+						"今、ボクの脳内くじ引きが大回転中～～～！🎰",
 					]}
 				/>
 			) : (

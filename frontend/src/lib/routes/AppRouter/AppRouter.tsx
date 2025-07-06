@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AIMode from "../../../pages/AIMode/AIMode";
-import Home from "../../../pages/Home/Home";
+import { AIMode } from "../../../pages/AIMode";
+import { Home } from "../../../pages/Home";
+import { NormalMode } from "../../../pages/NormalMode";
 import { Layout } from "../Layout";
 
 export function AppRouter() {
@@ -10,6 +11,7 @@ export function AppRouter() {
 				<Route path="/" element={<Layout />}>
 					<Route index element={<Home />} />
 					<Route path="ai" element={<AIMode />} />
+					<Route path="normal" element={<NormalMode />} />
 				</Route>
 			</Routes>
 		</BrowserRouter>

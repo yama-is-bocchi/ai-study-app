@@ -2,13 +2,17 @@ import { Box, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import yesman from "./../../../assets/yesman.png";
 import yesmanGood from "./../../../assets/yesman-good.png";
+import yesmanLoadFace from "./../../../assets/yesman-load-face.png";
+import yesmanLoader from "./../../../assets/yesman-loader.png";
 
-type YesManState = "good" | "normal" | "question";
+type YesManState = "good" | "normal" | "question" | "loader" | "loadFace";
 
 const yesmanImages: Record<YesManState, string> = {
 	good: yesmanGood,
 	normal: yesman,
 	question: yesman,
+	loader: yesmanLoader,
+	loadFace: yesmanLoadFace,
 };
 
 interface YesManProps {
