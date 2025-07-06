@@ -2,7 +2,6 @@ import { Box, Button, Card, Loader, Stack, Text } from "@mantine/core";
 import {
 	IconCircle,
 	IconMessageCircleSearch,
-	IconReportAnalytics,
 	IconStairsUp,
 	IconX,
 } from "@tabler/icons-react";

@@ -1,11 +1,11 @@
 import { Tabs } from "@mantine/core";
 import {
-	IconBubbleText,
-	IconChevronCompactRight,
-	IconChevronCompactUp,
-	IconLibrary,
-	IconPencilX,
-	IconRobot,
+  IconBubbleText,
+  IconChevronCompactLeft,
+  IconChevronCompactRight,
+  IconLibrary,
+  IconPencilX,
+  IconRobot,
 } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -58,7 +58,7 @@ export function TopTab() {
 					value="Toggle"
 					leftSection={
 						tabsVisible ? (
-							<IconChevronCompactUp size={24} />
+							<IconChevronCompactLeft size={14} />
 						) : (
 							<IconChevronCompactRight size={14} />
 						)
