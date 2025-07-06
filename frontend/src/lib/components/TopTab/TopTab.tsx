@@ -1,4 +1,4 @@
-import { Tabs } from "@mantine/core";
+import { Box, Button, Tabs } from "@mantine/core";
 import {
 	IconBubbleText,
 	IconChevronCompactLeft,
@@ -7,12 +7,19 @@ import {
 	IconPencilX,
 	IconRobot,
 } from "@tabler/icons-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function TopTab() {
 	const [tabsVisible, setTabsVisible] = useState(true);
+	const [isIncorrect, setIsIncorrect] = useState(false);
 	const navigate = useNavigate();
+	const handleEnterInCorrect = useCallback(() => {
+		setIsIncorrect(true);
+	}, []);
+	const handleLeaveInCorrect = useCallback(() => {
+		setIsIncorrect(false);
+	}, []);
 	return (
 		<Tabs
 			style={{
@@ -54,6 +61,8 @@ export function TopTab() {
 					value="Incorrect Answers"
 					style={{ display: tabsVisible ? "" : "none" }}
 					leftSection={<IconPencilX size={24} />}
+					onMouseEnter={handleEnterInCorrect}
+					onMouseLeave={handleLeaveInCorrect}
 				>
 					Incorrect Answers
 				</Tabs.Tab>
@@ -69,6 +78,36 @@ export function TopTab() {
 					onClick={() => setTabsVisible((prev) => !prev)}
 				/>
 			</Tabs.List>
+			<Box
+				onMouseEnter={handleEnterInCorrect}
+				onMouseLeave={handleLeaveInCorrect}
+				style={{
+					display: isIncorrect ? "flex" : "none",
+					flexDirection: "column",
+					position: "relative",
+					padding: "8px",
+					borderRadius: "16px",
+					textAlign: "center",
+					gap: "5px",
+				}}
+			>
+				<Button
+					onClick={() => {
+						setIsIncorrect(false);
+						navigate("/incorrect?mode=fields");
+					}}
+				>
+					Fields
+				</Button>
+				<Button
+					onClick={() => {
+						setIsIncorrect(false);
+						navigate("/incorrect?mode=all");
+					}}
+				>
+					All
+				</Button>
+			</Box>
 		</Tabs>
 	);
 }

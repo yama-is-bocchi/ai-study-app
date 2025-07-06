@@ -12,6 +12,7 @@ export function useQuestionAPI(): [
 	boolean,
 	{
 		getCommentary: (question: Question) => Promise<string>;
+		getIncorrectAnswers: () => Promise<Question[]>;
 		getQuestion: (mode: "ai" | "random") => Promise<OutputQuestion>;
 		registerAnswer: (
 			question: Question,
@@ -38,6 +39,25 @@ export function useQuestionAPI(): [
 				setLoading(false);
 			});
 	}, []);
+
+	// 誤答一覧取得
+	const getIncorrectAnswers = useCallback((): Promise<Question[]> => {
+		setLoading(true);
+		return getQuestions("incorrect")
+			.then((response) => response.json<Question[]>())
+			.catch((error) => {
+				console.error(`failed to fetch incorrect answers: ${error}`);
+				notifications.show({
+					color: "red",
+					title: "サーバーエラー",
+					message: `誤答一覧の取得に失敗しました: ${error}`,
+				});
+			})
+			.finally(() => {
+				setLoading(false);
+			});
+	}, []);
+
 	// 問題取得
 	const getQuestion = useCallback(
 		(mode: "ai" | "random"): Promise<OutputQuestion> => {
@@ -77,5 +97,8 @@ export function useQuestionAPI(): [
 		},
 		[],
 	);
-	return [loading, { getCommentary, getQuestion, registerAnswer }] as const;
+	return [
+		loading,
+		{ getCommentary, getIncorrectAnswers, getQuestion, registerAnswer },
+	] as const;
 }
