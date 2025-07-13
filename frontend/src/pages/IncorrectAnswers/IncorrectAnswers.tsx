@@ -1,15 +1,28 @@
-import { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Loader } from "@mantine/core";
+import { useAnswerCollector } from "../../lib/hooks/useAnswerCollector";
 
 export function IncorrectAnswers() {
-	const [searchParams] = useSearchParams();
-	const mode = searchParams.get("mode");
-	useEffect(() => {
-		console.log(mode);
-	}, [mode]);
+	const [loading, { mode, getAnswers, getAnswerMap }] =
+		useAnswerCollector("mode");
 	return (
-		<div>
-			<h1>Mode: {mode}</h1>
-		</div>
+		<>
+			{mode && !loading ? (
+				mode === "all" ? (
+					// TODO: 回答一覧
+					getAnswers().map((question, index) => (
+						<li key={question.answer}>{question.answer + index.toString()}</li>
+					))
+				) : (
+					// TODO: 分野別一覧
+					Array.from(getAnswerMap().entries()).map(([key, questions]) => (
+						<li key={key}>
+							{key}:{console.log(questions)}
+						</li>
+					))
+				)
+			) : (
+				<Loader />
+			)}
+		</>
 	);
 }
