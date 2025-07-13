@@ -1,21 +1,49 @@
-import { Badge, Box, Button, Card, type CardProps, Text } from "@mantine/core";
-import { IconMessageCircleSearch } from "@tabler/icons-react";
-import { useState } from "react";
+import {
+	Badge,
+	Box,
+	Button,
+	Card,
+	type CardProps,
+	Loader,
+	Text,
+} from "@mantine/core";
+import {
+	IconChevronCompactDown,
+	IconChevronCompactUp,
+	IconMessageCircleSearch,
+} from "@tabler/icons-react";
+import { useCallback, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import type { Question } from "../../models/question";
 
 interface IncorrectAnswerCardProps extends CardProps {
 	getCommentBehavior: (question: Question) => Promise<string>;
 	question: Question;
-	needFieldName: boolean;
 }
 
 export function IncorrectAnswerCard({
 	getCommentBehavior,
 	question,
-	needFieldName,
 	...props
 }: IncorrectAnswerCardProps) {
-	const [loading, setLoading] = useState<boolean>(false);
+	const [loading, setLoading] = useState(false);
+	const [isHovered, setIsHovered] = useState(false);
+	const [isOpenComment, setIsOpenComment] = useState(true);
+
+	const [comment, setComment] = useState<string | undefined>(undefined);
+	const clickGetCommentary = useCallback(() => {
+		setLoading(true);
+		setComment(undefined);
+		getCommentBehavior(question)
+			.then((value) => {
+				setComment(value);
+			})
+			.finally(() => {
+				setLoading(false);
+			});
+	});
+	const clickOpenComment = useCallback(() => setIsOpenComment((prev) => !prev));
 	return (
 		<Card
 			style={{
@@ -24,8 +52,12 @@ export function IncorrectAnswerCard({
 				fontFamily: "monospace",
 				border: "1px solid black",
 				boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
-				margin: "15px",
+				margin: "22px",
+				transition: "transform 0.2s ease-in-out",
+				transform: isHovered ? "scale(1.03)" : "scale(1)",
 			}}
+			onMouseEnter={() => setIsHovered(true)}
+			onMouseLeave={() => setIsHovered(false)}
 			{...props}
 		>
 			<Box
@@ -50,8 +82,10 @@ export function IncorrectAnswerCard({
 					position: "absolute",
 					top: "10px",
 					right: "30px",
+					boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
 				}}
 				leftSection={<IconMessageCircleSearch />}
+				onClick={clickGetCommentary}
 			>
 				解説
 			</Button>
@@ -120,6 +154,37 @@ export function IncorrectAnswerCard({
 					</Badge>
 					<Text style={{ textAlign: "center" }}>{question.answer}</Text>
 				</Box>
+			</Box>
+			<Box style={{ textAlign: "center" }}>
+				{loading ? (
+					<Loader />
+				) : (
+					<Box>
+						{comment ? (
+							isOpenComment ? (
+								<>
+									<Box style={{ textAlign: "left" }}>
+										{comment.length > 0 ? (
+											<Text size="28px">解説</Text>
+										) : undefined}
+										<ReactMarkdown remarkPlugins={[remarkGfm]}>
+											{comment}
+										</ReactMarkdown>
+									</Box>
+									<IconChevronCompactUp
+										style={{ cursor: "pointer" }}
+										onClick={clickOpenComment}
+									/>
+								</>
+							) : (
+								<IconChevronCompactDown
+									style={{ cursor: "pointer" }}
+									onClick={clickOpenComment}
+								/>
+							)
+						) : undefined}
+					</Box>
+				)}
 			</Box>
 		</Card>
 	);
