@@ -17,11 +17,15 @@ from .lib.prompt import PromptGenerator
 logger = get_logger(__name__)
 T = TypeVar("T", bound=BaseModel)
 
+# TODO: 引数をinterfaceにする
+
 
 class App:
     """DB操作,エージェントを利用したアプリケーションを提供する."""
 
     _cache_limit = 15
+    _oldest_question_limit = 8
+    _oldest_memo_limit = 365
 
     def __init__(self, config: Config) -> None:
         # psqlクライアントを追加
@@ -64,7 +68,7 @@ class App:
             report = ReportCache(answer_count=current_answer_sum, report=merged_prompt)
             self._storage_client.save_file(self._report_cache_file_name, report.model_dump_json().encode("utf-8"))
         # 直前に回答した問題
-        recent_questions = self._psql_client.get_answered_data(8)
+        recent_questions = self._psql_client.get_answered_data(self._oldest_question_limit)
         logger.info("%d responses were obtained", len(recent_questions))
 
         question_prompt, question_input = self._prompt_generator.generate_question_prompt(
@@ -94,7 +98,7 @@ class App:
     def get_random_questions(self, question_sum: int = 4) -> dict[str, Any]:
         """回答データを参照してランダムに問題を生成する."""
         # 直前に回答した問題
-        recent_questions = self._psql_client.get_answered_data(8)
+        recent_questions = self._psql_client.get_answered_data(self._oldest_question_limit)
         logger.info("%d responses were obtained", len(recent_questions))
 
         question_prompt, question_input = self._prompt_generator.generate_question_prompt(
@@ -151,7 +155,7 @@ class App:
     def get_all_memo_from_storage(self) -> list[FileInfo]:
         """ストレージに保存されているファイルを全て読み込んで返す."""
         logger.info("Getting all files in storage...")
-        return self._storage_client.read_all_markdown_files(365)
+        return self._storage_client.read_all_markdown_files(self._oldest_memo_limit)
 
     def delete_file_from_storage(self, file_name: str) -> None:
         """ストレージ内のファイルを削除する."""

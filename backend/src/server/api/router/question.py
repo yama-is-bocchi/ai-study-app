@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query, Request
 
 from app import AppContext, get_app_context
-from server.api.lib.params.api_parameter import QuestionMode
+from server.api.params import QuestionMode
 
 question_api_router = APIRouter()
 """課題のREST APIのエンドポイントを定義"""
