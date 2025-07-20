@@ -1,35 +1,33 @@
 import type { KyResponse } from "ky";
-import ky from "ky";
-import type { Question } from "../../models/question";
-import { TIMEOUT_INTERVAL } from "../const";
+import type { OutputtedQuestion, Question } from "../../models/question";
+import { kyClient } from "../kyClient/kyClient";
 
-export function getCommentaryFromQuestion(
-	question: Question,
-): Promise<KyResponse> {
-	return ky.post("/api/v1/question/commentary", {
-		json: question,
-		timeout: TIMEOUT_INTERVAL,
-	});
+export function getCommentaryFromQuestion(question: Question): Promise<string> {
+	return kyClient
+		.post("/api/v1/question/commentary", {
+			json: question,
+		})
+		.then((response) => response.json<string>());
 }
 
 export function getQuestions(
 	mode: "ai" | "random" | "incorrect",
 ): Promise<KyResponse> {
-	return ky.get("/api/v1/question", {
-		searchParams: { mode },
-		timeout: TIMEOUT_INTERVAL,
-	});
+	return kyClient
+		.get("/api/v1/question", {
+			searchParams: { mode },
+		})
+		.then((response) => response.json<OutputtedQuestion>());
 }
 
 export function postAnswer(
 	question: Question,
 	isCorrect: boolean,
-): Promise<KyResponse> {
-	return ky.post("/api/v1/question/answer", {
+): Promise<void> {
+	return kyClient.post("/api/v1/question/answer", {
 		json: {
 			...question,
 			correct: isCorrect,
 		},
-		timeout: TIMEOUT_INTERVAL,
 	});
 }

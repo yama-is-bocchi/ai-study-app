@@ -39,18 +39,9 @@ export function useAnswerCollector(urlParamName: string): [
 		switch (mode) {
 			case "fields":
 			case "all":
-				getIncorrectAnswers()
-					.then((questions) => {
-						setAnswerData(questions);
-					})
-					.catch((error) => {
-						console.error(`failed to fetch invalid answers: ${error}`);
-						notifications.show({
-							color: "red",
-							title: "サーバーエラー",
-							message: `誤答一覧の取得に失敗しました: ${error}`,
-						});
-					});
+				getIncorrectAnswers().then((questions) => {
+					setAnswerData(questions);
+				});
 				return;
 			default:
 				console.error(`invalid url parameter: ${mode}`);

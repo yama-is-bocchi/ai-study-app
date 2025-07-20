@@ -26,9 +26,7 @@ export function useQuestionAPI(): [
 	const getCommentary = useCallback((question: Question): Promise<string> => {
 		setLoading(true);
 		return getCommentaryFromQuestion(question)
-			.then((response) => response.json<string>())
 			.catch((error) => {
-				console.error(`failed to fetch commentary: ${error}`);
 				notifications.show({
 					color: "red",
 					title: "サーバーエラー",
@@ -44,14 +42,13 @@ export function useQuestionAPI(): [
 	const getIncorrectAnswers = useCallback((): Promise<Question[]> => {
 		setLoading(true);
 		return getQuestions("incorrect")
-			.then((response) => response.json<Question[]>())
 			.catch((error) => {
-				console.error(`failed to fetch incorrect answers: ${error}`);
 				notifications.show({
 					color: "red",
 					title: "サーバーエラー",
 					message: `誤答一覧の取得に失敗しました: ${error}`,
 				});
+				return [];
 			})
 			.finally(() => {
 				setLoading(false);
@@ -63,9 +60,7 @@ export function useQuestionAPI(): [
 		(mode: "ai" | "random"): Promise<OutputtedQuestion> => {
 			setLoading(true);
 			return getQuestions(mode)
-				.then((response) => response.json<OutputtedQuestion>())
 				.catch((error) => {
-					console.error(`failed to fetch questions in ${mode} mode: ${error}`);
 					notifications.show({
 						color: "red",
 						title: "サーバーエラー",
@@ -80,11 +75,10 @@ export function useQuestionAPI(): [
 	);
 	// 回答登録
 	const registerAnswer = useCallback(
-		(question: Question, isCorrect: boolean): Promise<KyResponse> => {
+		(question: Question, isCorrect: boolean): Promise<void> => {
 			setLoading(true);
 			return postAnswer(question, isCorrect)
 				.catch((error) => {
-					console.error(`failed to post answer data: ${error}`);
 					notifications.show({
 						color: "red",
 						title: "サーバーエラー",
