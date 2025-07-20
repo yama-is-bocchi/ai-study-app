@@ -92,7 +92,7 @@ export function IncorrectAnswerCard({
 				}}
 				leftSection={<IconMessageCircleSearch />}
 				onClick={clickGetCommentary}
-				// TODO: loaderを使ってdisableにする
+				disabled={loading}
 			>
 				解説
 			</Button>
