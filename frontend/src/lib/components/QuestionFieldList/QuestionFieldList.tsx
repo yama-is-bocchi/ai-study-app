@@ -51,7 +51,6 @@ export function QuestionFieldList({
 					boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
 					padding: "8px 12px",
 					userSelect: "none",
-					backgroundColor: "#f0f0f0",
 					maxHeight: "1080px",
 					overflowY: "auto",
 					overflowX: "hidden",
