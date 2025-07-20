@@ -9,7 +9,6 @@ export function Home() {
 					position: "fixed",
 					top: 0,
 					left: 0,
-					backgroundColor: "white",
 				}}
 			></Box>
 			<YesMan

@@ -10,7 +10,6 @@ export function Layout() {
 					position: "fixed",
 					top: 0,
 					left: 0,
-					backgroundColor: "white",
 					zIndex: 1000,
 				}}
 			>
