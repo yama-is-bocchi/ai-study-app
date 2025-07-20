@@ -22,10 +22,7 @@ export function IncorrectAnswers() {
 				) : (
 					// TODO: 分野別一覧
 					[...getAnswerMap().entries()].map(([field, questions]) => (
-						<div
-							key={field}
-							style={{ minWidth: "1000px", padding: "5px", marginTop: "10px" }}
-						>
+						<div key={field} style={{ padding: "5px", marginTop: "10px" }}>
 							<QuestionFieldList
 								fieldName={field}
 								getCommentBehavior={getCommentary}

@@ -35,7 +35,7 @@ export function QuestionFieldList({
 			>
 				<Group justify="space-between" align="center">
 					<Group gap="xs" align="center">
-						<Text>{fieldName}</Text>
+						<Text size="28px">{fieldName}</Text>
 					</Group>
 					{isOpen ? (
 						<IconChevronCompactUp size={16} />
@@ -44,28 +44,27 @@ export function QuestionFieldList({
 					)}
 				</Group>
 			</Box>
-			{isOpen ? (
-				<Box
-					style={{
-						border: "1px solid black",
-						boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
-						padding: "8px 12px",
-						userSelect: "none",
-						backgroundColor: "#f0f0f0",
-						maxHeight: "1080px",
-						overflowY: "auto",
-						overflowX: "hidden",
-					}}
-				>
-					{questionChildren.map((question, index) => (
-						<IncorrectAnswerCard
-							key={question.question + index.toString()}
-							question={question}
-							getCommentBehavior={getCommentBehavior}
-						/>
-					))}
-				</Box>
-			) : undefined}
+			<Box
+				style={{
+					display: isOpen ? "block" : "none",
+					border: "1px solid black",
+					boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
+					padding: "8px 12px",
+					userSelect: "none",
+					backgroundColor: "#f0f0f0",
+					maxHeight: "1080px",
+					overflowY: "auto",
+					overflowX: "hidden",
+				}}
+			>
+				{questionChildren.map((question, index) => (
+					<IncorrectAnswerCard
+						key={question.question + index.toString()}
+						question={question}
+						getCommentBehavior={getCommentBehavior}
+					/>
+				))}
+			</Box>
 		</>
 	);
 }
