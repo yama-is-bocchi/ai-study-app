@@ -1,10 +1,10 @@
 import { Box, Stack } from "@mantine/core";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { AnswerForm } from "../../lib/components/AnswerForm";
 import { RandomButtonBox } from "../../lib/components/RandomButtonBox";
 import { YesMan } from "../../lib/components/YesMan";
 import { useQuestionAPI } from "../../lib/hooks/useQuestionAPI";
-import type { OutputQuestion, Question } from "../../lib/models/question";
+import { questionModeReducer } from "./questionModeReducer";
 
 interface QuestionModeProps {
 	mode: "ai" | "random";
@@ -12,21 +12,15 @@ interface QuestionModeProps {
 
 export function QuestionMode({ mode }: QuestionModeProps) {
 	const [loading, { getQuestion, registerAnswer }] = useQuestionAPI();
-	const [outputQuestion, setOutputQuestion] = useState<
-		OutputQuestion | undefined
-	>(undefined);
-	const [answeredQuestionData, setAnsweredQuestionData] = useState<
-		| {
-				answered: boolean;
-				question: Question;
-		  }
-		| undefined
-	>(undefined);
-	const [selectedAnswer, setSelectedAnswer] = useState("");
+	const [state, dispatch] = useReducer(questionModeReducer, {
+		outputtedQuestion: undefined,
+		answeredQuestionData: undefined,
+		selectedAnswer: "",
+	});
 
 	const refreshQuestions = useCallback(() => {
 		getQuestion(mode).then((current_question) => {
-			setOutputQuestion(current_question);
+			dispatch({ type: "SET_OUTPUTTED_QUESTION", payload: current_question });
 		});
 	}, [getQuestion, mode]);
 
@@ -35,7 +29,7 @@ export function QuestionMode({ mode }: QuestionModeProps) {
 	}, [refreshQuestions]);
 	return (
 		<>
-			{loading || outputQuestion === undefined ? (
+			{loading || state.outputtedQuestion === undefined ? (
 				<YesMan
 					state={mode === "ai" ? "loader" : "loadFace"}
 					messages={
@@ -54,38 +48,47 @@ export function QuestionMode({ mode }: QuestionModeProps) {
 				<Stack spacing="sm" p="10px">
 					<Box>
 						<YesMan
-							key={outputQuestion.question.answer}
+							key={state.outputtedQuestion.question.answer}
 							state="question"
-							messages={[outputQuestion.question.question]}
+							messages={[state.outputtedQuestion.question.question]}
 						/>
 					</Box>
-					{answeredQuestionData === undefined ? (
+					{state.answeredQuestionData === undefined ? (
 						<Box>
 							<RandomButtonBox
 								answers={[
-									outputQuestion.question.answer,
-									...outputQuestion.dummy_answers,
+									state.outputtedQuestion.question.answer,
+									...state.outputtedQuestion.dummy_answers,
 								]}
 								selectAnswerBehavior={(current_answer) => {
-									setSelectedAnswer(current_answer);
-									setAnsweredQuestionData({
-										answered: true,
-										question: outputQuestion.question,
+									dispatch({
+										type: "SET_SELECTED_ANSWER",
+										payload: current_answer,
+									});
+									dispatch({
+										type: "SET_ANSWERED_QUESTION_DATA",
+										payload: {
+											answered: true,
+											question: state.outputtedQuestion.question,
+										},
 									});
 									// 回答データの送信
 									registerAnswer(
-										outputQuestion.question,
-										current_answer === outputQuestion.question.answer,
+										state.outputtedQuestion.question,
+										current_answer === state.outputtedQuestion.question.answer,
 									);
 								}}
 							/>
 						</Box>
 					) : (
 						<AnswerForm
-							selectedAnswer={selectedAnswer}
-							question={outputQuestion.question}
+							selectedAnswer={state.selectedAnswer}
+							question={state.outputtedQuestion.question}
 							clickNextBehavior={() => {
-								setAnsweredQuestionData(undefined);
+								dispatch({
+									type: "SET_ANSWERED_QUESTION_DATA",
+									payload: undefined,
+								});
 								refreshQuestions();
 							}}
 						/>

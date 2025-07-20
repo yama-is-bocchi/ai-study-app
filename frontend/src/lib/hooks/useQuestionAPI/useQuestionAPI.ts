@@ -6,14 +6,14 @@ import {
 	getQuestions,
 	postAnswer,
 } from "../../api/question";
-import type { OutputQuestion, Question } from "../../models/question";
+import type { OutputtedQuestion, Question } from "../../models/question";
 
 export function useQuestionAPI(): [
 	boolean,
 	{
 		getCommentary: (question: Question) => Promise<string>;
 		getIncorrectAnswers: () => Promise<Question[]>;
-		getQuestion: (mode: "ai" | "random") => Promise<OutputQuestion>;
+		getQuestion: (mode: "ai" | "random") => Promise<OutputtedQuestion>;
 		registerAnswer: (
 			question: Question,
 			isCorrect: boolean,
@@ -60,10 +60,10 @@ export function useQuestionAPI(): [
 
 	// 問題取得
 	const getQuestion = useCallback(
-		(mode: "ai" | "random"): Promise<OutputQuestion> => {
+		(mode: "ai" | "random"): Promise<OutputtedQuestion> => {
 			setLoading(true);
 			return getQuestions(mode)
-				.then((response) => response.json<OutputQuestion>())
+				.then((response) => response.json<OutputtedQuestion>())
 				.catch((error) => {
 					console.error(`failed to fetch questions in ${mode} mode: ${error}`);
 					notifications.show({

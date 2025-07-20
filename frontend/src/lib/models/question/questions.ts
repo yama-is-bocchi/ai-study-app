@@ -5,7 +5,7 @@ export type Question = {
 	timestamp: string | undefined;
 };
 
-export type OutputQuestion = {
+export type OutputtedQuestion = {
 	question: Question;
 	dummy_answers: string[];
 };
