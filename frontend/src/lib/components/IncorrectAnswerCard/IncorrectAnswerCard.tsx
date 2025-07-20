@@ -12,10 +12,11 @@ import {
 	IconChevronCompactUp,
 	IconMessageCircleSearch,
 } from "@tabler/icons-react";
-import { useCallback, useState } from "react";
+import { useCallback, useReducer } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Question } from "../../models/question";
+import { incorrectAnswerCardReducer } from "./incorrectAnswerCardReducer";
 
 interface IncorrectAnswerCardProps extends CardProps {
 	getCommentBehavior: (question: Question) => Promise<string>;
@@ -29,24 +30,26 @@ export function IncorrectAnswerCard({
 	showFieldName = true,
 	...props
 }: IncorrectAnswerCardProps) {
-	const [loading, setLoading] = useState(false);
-	const [isHovered, setIsHovered] = useState(false);
-	const [isOpenComment, setIsOpenComment] = useState(true);
+	const [state, dispatch] = useReducer(incorrectAnswerCardReducer, {
+		loading: false,
+		isHovered: false,
+		isOpenComment: true,
+		comment: undefined,
+	});
 
-	const [comment, setComment] = useState<string | undefined>(undefined);
 	const clickGetCommentary = useCallback(() => {
-		setLoading(true);
-		setComment(undefined);
+		dispatch({ type: "SET_LOADING", payload: true });
+		dispatch({ type: "SET_COMMENT", payload: undefined });
 		getCommentBehavior(question)
 			.then((value) => {
-				setComment(value);
+				dispatch({ type: "SET_COMMENT", payload: value });
 			})
 			.finally(() => {
-				setLoading(false);
+				dispatch({ type: "SET_LOADING", payload: false });
 			});
 	}, [getCommentBehavior, question]);
 	const clickOpenComment = useCallback(
-		() => setIsOpenComment((prev) => !prev),
+		() => dispatch({ type: "TOGGLE_IS_OPEN_COMMENT" }),
 		[],
 	);
 	return (
@@ -59,10 +62,10 @@ export function IncorrectAnswerCard({
 				boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
 				margin: "22px",
 				transition: "transform 0.2s ease-in-out",
-				transform: isHovered ? "scale(1.03)" : "scale(1)",
+				transform: state.isHovered ? "scale(1.03)" : "scale(1)",
 			}}
-			onMouseEnter={() => setIsHovered(true)}
-			onMouseLeave={() => setIsHovered(false)}
+			onMouseEnter={() => dispatch({ type: "SET_HOVERED", payload: true })}
+			onMouseLeave={() => dispatch({ type: "SET_HOVERED", payload: false })}
 			{...props}
 		>
 			<Box
@@ -92,7 +95,7 @@ export function IncorrectAnswerCard({
 				}}
 				leftSection={<IconMessageCircleSearch />}
 				onClick={clickGetCommentary}
-				disabled={loading}
+				disabled={state.loading}
 			>
 				解説
 			</Button>
@@ -163,19 +166,19 @@ export function IncorrectAnswerCard({
 				</Box>
 			</Box>
 			<Box style={{ textAlign: "center" }}>
-				{loading ? (
+				{state.loading ? (
 					<Loader />
 				) : (
 					<Box>
-						{comment ? (
-							isOpenComment ? (
+						{state.comment ? (
+							state.isOpenComment ? (
 								<>
 									<Box style={{ textAlign: "left" }}>
-										{comment.length > 0 ? (
+										{state.comment.length > 0 ? (
 											<Text size="28px">解説</Text>
 										) : undefined}
 										<ReactMarkdown remarkPlugins={[remarkGfm]}>
-											{comment}
+											{state.comment}
 										</ReactMarkdown>
 									</Box>
 									<IconChevronCompactUp
