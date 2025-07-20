@@ -1,9 +1,10 @@
 import { Box, Text } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import yesman from "./../../../assets/yesman.png";
 import yesmanGood from "./../../../assets/yesman-good.png";
 import yesmanLoadFace from "./../../../assets/yesman-load-face.png";
 import yesmanLoader from "./../../../assets/yesman-loader.png";
+import { yesManReducer } from "./yesManReducer";
 
 type YesManState = "good" | "normal" | "question" | "loader" | "loadFace";
 
@@ -21,33 +22,42 @@ interface YesManProps {
 }
 
 export function YesMan({ state, messages }: YesManProps) {
-	const [displayedMessages, setDisplayedMessages] = useState<string[]>([]);
-	const [currentLine, setCurrentLine] = useState(0);
-	const [charIndex, setCharIndex] = useState(0);
+	const [componentState, dispatch] = useReducer(yesManReducer, {
+		displayedMessages: [],
+		currentLine: 0,
+		charIndex: 0,
+	});
 
 	useEffect(() => {
-		if (currentLine >= messages.length) return;
+		if (componentState.currentLine >= messages.length) return;
 
-		const fullText = messages[currentLine];
-		const currentText = displayedMessages[currentLine] || "";
+		const fullText = messages[componentState.currentLine];
+		const currentText =
+			componentState.displayedMessages[componentState.currentLine] || "";
 
-		if (charIndex < fullText.length) {
+		if (componentState.charIndex < fullText.length) {
 			const timeout = setTimeout(() => {
-				const updatedLine = currentText + fullText[charIndex];
-				const updatedMessages = [...displayedMessages];
-				updatedMessages[currentLine] = updatedLine;
-				setDisplayedMessages(updatedMessages);
-				setCharIndex((prev) => prev + 1);
+				const updatedLine = currentText + fullText[componentState.charIndex];
+				const updatedMessages = [...componentState.displayedMessages];
+				updatedMessages[componentState.currentLine] = updatedLine;
+				dispatch({ type: "SET_DISPLAYED_MESSAGES", payload: updatedMessages });
+				dispatch({
+					type: "SET_CHAR_INDEX",
+					payload: componentState.charIndex + 1,
+				});
 			}, 40);
 			return () => clearTimeout(timeout);
 		}
-		if (currentLine + 1 < messages.length) {
+		if (componentState.currentLine + 1 < messages.length) {
 			setTimeout(() => {
-				setCurrentLine((prev) => prev + 1);
-				setCharIndex(0);
+				dispatch({ type: "INCREMENT_CURRENT_LINE" });
+				dispatch({
+					type: "SET_CHAR_INDEX",
+					payload: 0,
+				});
 			}, 400);
 		}
-	}, [charIndex, currentLine, displayedMessages, messages]);
+	}, [componentState.charIndex, componentState.currentLine, messages]);
 
 	return (
 		<>
@@ -71,7 +81,7 @@ export function YesMan({ state, messages }: YesManProps) {
 					fontFamily: "monospace",
 				}}
 			>
-				{displayedMessages.map((message, index) => (
+				{componentState.displayedMessages.map((message, index) => (
 					<Text
 						key={message + index.toString()}
 						size={state === "question" ? "lg" : "md"}
