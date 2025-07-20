@@ -19,12 +19,14 @@ import type { Question } from "../../models/question";
 
 interface IncorrectAnswerCardProps extends CardProps {
 	getCommentBehavior: (question: Question) => Promise<string>;
-	question: Question; // TODO: フィールド名の表示/非表示をパラメータ化
+	question: Question;
+	showFieldName: boolean;
 }
 
 export function IncorrectAnswerCard({
 	getCommentBehavior,
 	question,
+	showFieldName = true,
 	...props
 }: IncorrectAnswerCardProps) {
 	const [loading, setLoading] = useState(false);
@@ -72,6 +74,7 @@ export function IncorrectAnswerCard({
 					boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
 					color: "#888",
 					padding: "5px",
+					display: showFieldName ? "block" : "none",
 				}}
 			>
 				<Text color="black" size="sm">

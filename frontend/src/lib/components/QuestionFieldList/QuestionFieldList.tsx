@@ -62,6 +62,7 @@ export function QuestionFieldList({
 						key={question.question + index.toString()}
 						question={question}
 						getCommentBehavior={getCommentBehavior}
+						showFieldName={false}
 					/>
 				))}
 			</Box>
