@@ -1,5 +1,5 @@
 import { Box, Text } from "@mantine/core";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer } from "react";
 import yesman from "./../../../assets/yesman.png";
 import yesmanGood from "./../../../assets/yesman-good.png";
 import yesmanLoadFace from "./../../../assets/yesman-load-face.png";
@@ -57,7 +57,7 @@ export function YesMan({ state, messages }: YesManProps) {
 				});
 			}, 400);
 		}
-	}, [componentState.charIndex, componentState.currentLine, messages]);
+	}, [componentState, messages]);
 
 	return (
 		<>

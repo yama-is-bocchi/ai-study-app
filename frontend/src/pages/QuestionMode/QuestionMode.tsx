@@ -6,7 +6,11 @@ import { YesMan } from "../../lib/components/YesMan";
 import { useQuestionAPI } from "../../lib/hooks/useQuestionAPI";
 import type { OutputQuestion, Question } from "../../lib/models/question";
 
-export function NormalMode() {
+interface QuestionModeProps {
+	mode: "ai" | "random";
+}
+
+export function QuestionMode({ mode }: QuestionModeProps) {
 	const [loading, { getQuestion, registerAnswer }] = useQuestionAPI();
 	const [outputQuestion, setOutputQuestion] = useState<
 		OutputQuestion | undefined
@@ -21,10 +25,10 @@ export function NormalMode() {
 	const [selectedAnswer, setSelectedAnswer] = useState("");
 
 	const refreshQuestions = useCallback(() => {
-		getQuestion("random").then((current_question) => {
+		getQuestion(mode).then((current_question) => {
 			setOutputQuestion(current_question);
 		});
-	}, [getQuestion]);
+	}, [getQuestion, mode]);
 
 	useEffect(() => {
 		refreshQuestions();
@@ -33,11 +37,18 @@ export function NormalMode() {
 		<>
 			{loading || outputQuestion === undefined ? (
 				<YesMan
-					state="loadFace"
-					messages={[
-						"フフフ、何が出るかはボクにもわかんないよっ！でも、きっと楽しいはず～！",
-						"今、ボクの脳内くじ引きが大回転中～～～！🎰",
-					]}
+					state={mode === "ai" ? "loader" : "loadFace"}
+					messages={
+						mode === "ai"
+							? [
+									"うーん、ちょっと待ってねっ！ボクが今、一生懸命データを読み取ってるところなんだ～！",
+									"すぐ終わるから、そのままワクワクして待っててねっ！🔍",
+								]
+							: [
+									"フフフ、何が出るかはボクにもわかんないよっ！でも、きっと楽しいはず～！",
+									"今、ボクの脳内くじ引きが大回転中～～～！🎰",
+								]
+					}
 				/>
 			) : (
 				<Stack spacing="sm" p="10px">

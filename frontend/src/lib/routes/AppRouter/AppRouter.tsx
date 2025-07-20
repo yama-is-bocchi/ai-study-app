@@ -1,8 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { AIMode } from "../../../pages/AIMode";
 import { Home } from "../../../pages/Home";
 import { IncorrectAnswers } from "../../../pages/IncorrectAnswers";
-import { NormalMode } from "../../../pages/NormalMode";
+import { QuestionMode } from "../../../pages/QuestionMode";
 import { Layout } from "../Layout";
 
 export function AppRouter() {
@@ -11,8 +10,8 @@ export function AppRouter() {
 			<Routes>
 				<Route path="/" element={<Layout />}>
 					<Route index element={<Home />} />
-					<Route path="ai" element={<AIMode />} />
-					<Route path="normal" element={<NormalMode />} />
+					<Route path="ai" element={<QuestionMode mode="ai" />} />
+					<Route path="normal" element={<QuestionMode mode="random" />} />
 					<Route path="incorrect" element={<IncorrectAnswers />} />
 				</Route>
 			</Routes>
