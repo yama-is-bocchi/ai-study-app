@@ -23,9 +23,14 @@ export function useAnswerCollector(urlParamName: string): [
 	const getAnswerMap = useCallback(
 		(): AnswerMapByFields =>
 			answerData.reduce((accumulator, question) => {
-				accumulator.set(question.field_name, question);
+				const questions = accumulator.get(question.field_name);
+				if (questions) {
+					questions.push(question);
+				} else {
+					accumulator.set(question.field_name, [question]);
+				}
 				return accumulator;
-			}, new Map<string, Question>()),
+			}, new Map<string, Question[]>()),
 		[answerData],
 	);
 	const getAnswers = useCallback((): Question[] => answerData);
@@ -34,9 +39,18 @@ export function useAnswerCollector(urlParamName: string): [
 		switch (mode) {
 			case "fields":
 			case "all":
-				getIncorrectAnswers().then((questions) => {
-					setAnswerData(questions);
-				});
+				getIncorrectAnswers()
+					.then((questions) => {
+						setAnswerData(questions);
+					})
+					.catch((error) => {
+						console.error(`failed to fetch invalid answers: ${error}`);
+						notifications.show({
+							color: "red",
+							title: "サーバーエラー",
+							message: `誤答一覧の取得に失敗しました: ${error}`,
+						});
+					});
 				return;
 			default:
 				console.error(`invalid url parameter: ${mode}`);

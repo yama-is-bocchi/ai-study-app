@@ -30,7 +30,7 @@ export function AIMode() {
 		refreshQuestions();
 	}, [refreshQuestions]);
 	return (
-		<div>
+		<>
 			{loading || outputQuestion === undefined ? (
 				<YesMan
 					state="loader"
@@ -81,6 +81,6 @@ export function AIMode() {
 					)}
 				</Stack>
 			)}
-		</div>
+		</>
 	);
 }

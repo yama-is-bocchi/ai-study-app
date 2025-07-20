@@ -22,6 +22,7 @@
         "iconify",
         "Avenir",
         "yesman",
-        "tabler"
+        "tabler",
+        "vite"
     ]
 }

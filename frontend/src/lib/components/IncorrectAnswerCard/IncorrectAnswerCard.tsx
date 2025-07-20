@@ -19,7 +19,7 @@ import type { Question } from "../../models/question";
 
 interface IncorrectAnswerCardProps extends CardProps {
 	getCommentBehavior: (question: Question) => Promise<string>;
-	question: Question;
+	question: Question; // TODO: フィールド名の表示/非表示をパラメータ化
 }
 
 export function IncorrectAnswerCard({
@@ -42,8 +42,11 @@ export function IncorrectAnswerCard({
 			.finally(() => {
 				setLoading(false);
 			});
-	});
-	const clickOpenComment = useCallback(() => setIsOpenComment((prev) => !prev));
+	}, [getCommentBehavior, question]);
+	const clickOpenComment = useCallback(
+		() => setIsOpenComment((prev) => !prev),
+		[],
+	);
 	return (
 		<Card
 			style={{
@@ -86,6 +89,7 @@ export function IncorrectAnswerCard({
 				}}
 				leftSection={<IconMessageCircleSearch />}
 				onClick={clickGetCommentary}
+				// TODO: loaderを使ってdisableにする
 			>
 				解説
 			</Button>

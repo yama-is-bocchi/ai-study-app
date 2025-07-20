@@ -4,7 +4,7 @@ import { TopTab } from "./../../components/TopTab";
 
 export function Layout() {
 	return (
-		<div>
+		<>
 			<Box
 				style={{
 					position: "fixed",
@@ -17,6 +17,6 @@ export function Layout() {
 				<TopTab />
 			</Box>
 			<Outlet />
-		</div>
+		</>
 	);
 }

@@ -71,38 +71,34 @@ export function AnswerForm({
 						<Box>あなたが選択した回答 : {selectedAnswer}</Box>
 					</>
 				)}
-				<Box>
-					<Box
-						style={
-							commentary.length > 0
-								? {
-										padding: "20px",
-										backgroundColor: "#f9f9f9",
-										borderRadius: "8px",
-										border: "1px solid #ddd",
-										boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-									}
-								: undefined
-						}
-					>
-						{loading ? <Loader /> : undefined}
-						<Box style={{ textAlign: "left" }}>
-							{commentary.length > 0 ? (
-								<Text size="28px">解説</Text>
-							) : undefined}
-							<ReactMarkdown remarkPlugins={[remarkGfm]}>
-								{commentary}
-							</ReactMarkdown>
-						</Box>
+				<Box
+					style={
+						commentary.length > 0
+							? {
+									padding: "20px",
+									backgroundColor: "#f9f9f9",
+									borderRadius: "8px",
+									border: "1px solid #ddd",
+									boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+								}
+							: undefined
+					}
+				>
+					{loading ? <Loader /> : undefined}
+					<Box style={{ textAlign: "left" }}>
+						{commentary.length > 0 ? <Text size="28px">解説</Text> : undefined}
+						<ReactMarkdown remarkPlugins={[remarkGfm]}>
+							{commentary}
+						</ReactMarkdown>
 					</Box>
-					<Button
-						style={{ marginTop: "10px" }}
-						rightSection={<IconStairsUp />}
-						onClick={clickNextBehavior}
-					>
-						次の問題
-					</Button>
 				</Box>
+				<Button
+					style={{ marginTop: "10px" }}
+					rightSection={<IconStairsUp />}
+					onClick={clickNextBehavior}
+				>
+					次の問題
+				</Button>
 			</Stack>
 		</Card>
 	);

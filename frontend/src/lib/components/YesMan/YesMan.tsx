@@ -50,7 +50,7 @@ export function YesMan({ state, messages }: YesManProps) {
 	}, [charIndex, currentLine, displayedMessages, messages]);
 
 	return (
-		<div>
+		<>
 			<Box style={{ textAlign: state === "question" ? "left" : "center" }}>
 				<img
 					src={yesmanImages[state]}
@@ -71,18 +71,16 @@ export function YesMan({ state, messages }: YesManProps) {
 					fontFamily: "monospace",
 				}}
 			>
-				<div>
-					{displayedMessages.map((message, index) => (
-						<Text
-							key={message + index.toString()}
-							size={state === "question" ? "lg" : "md"}
-							style={{ marginBottom: 8 }}
-						>
-							{message}
-						</Text>
-					))}
-				</div>
+				{displayedMessages.map((message, index) => (
+					<Text
+						key={message + index.toString()}
+						size={state === "question" ? "lg" : "md"}
+						style={{ marginBottom: 8 }}
+					>
+						{message}
+					</Text>
+				))}
 			</Box>
-		</div>
+		</>
 	);
 }

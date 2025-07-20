@@ -30,7 +30,7 @@ export function NormalMode() {
 		refreshQuestions();
 	}, [refreshQuestions]);
 	return (
-		<div>
+		<>
 			{loading || outputQuestion === undefined ? (
 				<YesMan
 					state="loadFace"
@@ -81,6 +81,6 @@ export function NormalMode() {
 					)}
 				</Stack>
 			)}
-		</div>
+		</>
 	);
 }

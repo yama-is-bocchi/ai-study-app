@@ -3,7 +3,7 @@ import { YesMan } from "../../lib/components/YesMan";
 
 export function Home() {
 	return (
-		<div>
+		<>
 			<Box
 				style={{
 					position: "fixed",
@@ -19,6 +19,6 @@ export function Home() {
 					"上のタブから使いたいモードをポチッと選んでくれると、とっても嬉しいな～！",
 				]}
 			/>
-		</div>
+		</>
 	);
 }

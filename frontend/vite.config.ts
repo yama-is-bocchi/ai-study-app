@@ -9,4 +9,15 @@ export default defineConfig({
 			"/api": "http://127.0.0.1:8080",
 		},
 	},
+	build: {
+		rollupOptions: {
+			output: {
+				manualChunks: {
+					react: ["react", "react-dom"],
+					mantine: ["@mantine/core", "@mantine/hooks"],
+					icons: ["@tabler/icons-react"],
+				},
+			},
+		},
+	},
 });
