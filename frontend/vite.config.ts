@@ -10,12 +10,14 @@ export default defineConfig({
 		},
 	},
 	build: {
+		chunkSizeWarningLimit: 1536,
 		rollupOptions: {
 			output: {
 				manualChunks: {
 					react: ["react", "react-dom"],
 					mantine: ["@mantine/core", "@mantine/hooks"],
 					icons: ["@tabler/icons-react"],
+					markdown: ["@uiw/react-md-editor"],
 				},
 			},
 		},

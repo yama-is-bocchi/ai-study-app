@@ -6,14 +6,7 @@ import type { Question } from "../../models/question";
 import { useQuestionAPI } from "../useQuestionAPI";
 
 /** パラメータ名に対応する値は field | all である必要があります。 */
-export function useAnswerCollector(urlParamName: string): [
-	boolean,
-	{
-		mode: string | null;
-		getAnswers: () => Question[];
-		getAnswerMap: () => AnswerMapByFields;
-	},
-] {
+export function useAnswerCollector(urlParamName: string) {
 	const [searchParams] = useSearchParams();
 	const [loading, { getIncorrectAnswers }] = useQuestionAPI();
 	const [answerData, setAnswerData] = useState<Question[]>([]);

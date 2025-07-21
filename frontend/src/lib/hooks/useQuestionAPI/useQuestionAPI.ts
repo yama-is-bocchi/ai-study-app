@@ -1,5 +1,4 @@
 import { notifications } from "@mantine/notifications";
-import type { KyResponse } from "ky";
 import { useCallback, useState } from "react";
 import {
 	getCommentaryFromQuestion,
@@ -8,18 +7,7 @@ import {
 } from "../../api/question";
 import type { OutputtedQuestion, Question } from "../../models/question";
 
-export function useQuestionAPI(): [
-	boolean,
-	{
-		getCommentary: (question: Question) => Promise<string>;
-		getIncorrectAnswers: () => Promise<Question[]>;
-		getQuestion: (mode: "ai" | "random") => Promise<OutputtedQuestion>;
-		registerAnswer: (
-			question: Question,
-			isCorrect: boolean,
-		) => Promise<KyResponse>;
-	},
-] {
+export function useQuestionAPI() {
 	const [loading, setLoading] = useState(false);
 
 	// 解説取得
