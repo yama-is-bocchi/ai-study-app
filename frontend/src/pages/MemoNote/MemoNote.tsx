@@ -4,7 +4,7 @@ import { MemoCard } from "../../lib/components/MemoCard";
 import { useServerStorage } from "../../lib/hooks/useServerStorage";
 import type { MemoData } from "../../lib/models/memo";
 export function MemoNote() {
-	const [loading, { getMemoList }] = useServerStorage();
+	const [loading, { getMemoList, uploadFile }] = useServerStorage();
 	const [memoList, setMemoList] = useState<MemoData[] | undefined>(undefined);
 	const refreshMemoList = useCallback(() => {
 		getMemoList().then((memo) => {
@@ -14,13 +14,18 @@ export function MemoNote() {
 	useEffect(() => {
 		refreshMemoList();
 	}, [refreshMemoList]);
-	if (loading) return <Loader />;
+	if (memoList === undefined && loading) return <Loader />;
 	return (
 		<div style={{ marginTop: "20px" }}>
 			{memoList
 				? memoList.map((memo) => (
 						<>
-							<MemoCard memo={memo} uploadFileBehavior={() => {}} />
+							<MemoCard
+								memo={memo}
+								uploadFileBehavior={(content) =>
+									uploadFile(`${memo.name}.md`, content, "text/plain")
+								}
+							/>
 						</>
 					))
 				: undefined}

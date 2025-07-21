@@ -1,4 +1,5 @@
 import { Button, Card, type CardProps, Text } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { IconCancel, IconUpload } from "@tabler/icons-react";
 import MDEditor from "@uiw/react-md-editor";
 import { useReducer } from "react";
@@ -7,7 +8,7 @@ import { memoCardReducer } from "./memoCardReducer";
 
 interface MemoCardProps extends CardProps {
 	memo: MemoData;
-	uploadFileBehavior: () => Promise<void>;
+	uploadFileBehavior: (content: string) => Promise<void>;
 }
 
 export function MemoCard({
@@ -17,6 +18,7 @@ export function MemoCard({
 }: MemoCardProps) {
 	const [state, dispatch] = useReducer(memoCardReducer, {
 		memo: memo.data,
+		undoMemo: memo.data,
 		isOpenEditor: false,
 	});
 	return (
@@ -73,7 +75,12 @@ export function MemoCard({
 				onClick={() => {
 					dispatch({ type: "UPDATE_UNDO_MEMO" });
 					dispatch({ type: "TOGGLE_OPEN_EDITOR" });
-					// TODO: アップロード
+					uploadFileBehavior(state.memo).then(() => {
+						notifications.show({
+							title: "完了通知",
+							message: `メモを更新しました: ${memo.name}`,
+						});
+					});
 				}}
 				rightSection={<IconUpload size={20} />}
 			>
