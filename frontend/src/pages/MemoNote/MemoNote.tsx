@@ -16,7 +16,7 @@ export function MemoNote() {
 	}, [refreshMemoList]);
 	if (loading) return <Loader />;
 	return (
-		<>
+		<div style={{ marginTop: "20px" }}>
 			{memoList
 				? memoList.map((memo) => (
 						<>
@@ -24,6 +24,6 @@ export function MemoNote() {
 						</>
 					))
 				: undefined}
-		</>
+		</div>
 	);
 }

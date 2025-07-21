@@ -30,7 +30,6 @@ export function AnswerForm({
 				padding: "16px",
 				borderRadius: "16px",
 				textAlign: "center",
-				fontFamily: "monospace",
 				border: "1px solid black",
 				boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
 			}}

@@ -6,7 +6,7 @@ export function useServerStorage() {
 	const [loading, setLoading] = useState(false);
 	const getMemoList = useCallback((): Promise<MemoData[]> => {
 		setLoading(true);
-		return getMemoDataList()
+		return getMemoDataList() // TODO: nowのデータが無ければ空で追加
 			.catch((error) => {
 				notifications.show({
 					color: "red",

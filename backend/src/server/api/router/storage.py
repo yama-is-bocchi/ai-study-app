@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Query, Request
 
 from app import AppContext, get_app_context
 
@@ -20,9 +20,12 @@ async def upload_file(
 
 
 @storage_api_router.get("/memo")
-def get_all_files(context: Annotated[AppContext, Depends(get_app_context)]) -> list:
+def get_all_files(
+    context: Annotated[AppContext, Depends(get_app_context)],
+    limit: Annotated[int | None, Query(...)] = None,
+) -> list:
     """全ファイルのメモデータをリストで返す."""
-    return context.app.get_all_memo_from_storage()
+    return context.app.get_all_memo_from_storage(limit=limit if limit else 365)
 
 
 @storage_api_router.delete("/{file_name}")

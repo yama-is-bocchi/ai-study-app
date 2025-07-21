@@ -56,7 +56,6 @@ export function IncorrectAnswerCard({
 			style={{
 				position: "relative",
 				borderRadius: "16px",
-				fontFamily: "monospace",
 				border: "1px solid black",
 				boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
 				margin: "22px",

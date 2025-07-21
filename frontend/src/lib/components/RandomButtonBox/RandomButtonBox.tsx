@@ -21,7 +21,6 @@ export function RandomButtonBox({
 	return (
 		<Card
 			style={{
-				fontFamily: "monospace",
 				boxShadow: "#fff",
 				padding: "30px",
 			}}

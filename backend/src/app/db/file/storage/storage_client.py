@@ -30,18 +30,7 @@ class StorageClient:
 
     def read_all_markdown_files(self, limit: int = 100) -> list[FileInfo]:
         """マークダウンファイルの内容を制限付きで取得する。ファイル名でソートされる."""
-        # ファイル名でソート
-        files = sorted(
-            self._dir_path.glob("*.md"),
-            key=lambda file: file.stem,
-            reverse=True,
-        )
-        result = []
-        for file in files[:limit]:
-            data = file.read_text(encoding="utf-8")
-            result.append(FileInfo(name=file.name, data=data))
-
-        return result
+        return [FileInfo(name=file.stem, data=file.read_text(encoding="utf-8")) for file in sorted(self._dir_path.glob("*.md"), key=lambda f: f.stem, reverse=True)[:limit]]
 
     def delete_file(self, file_name: str) -> None:
         """対象のファイル名のデータを削除する."""

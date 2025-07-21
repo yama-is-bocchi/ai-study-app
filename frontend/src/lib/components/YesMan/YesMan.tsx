@@ -78,7 +78,6 @@ export function YesMan({ state, messages }: YesManProps) {
 					boxShadow: "0 0 12px #00ff00, inset 0 0 6px #00ff00",
 					color: "#00ff00",
 					textShadow: "0 0 2px #00ff00",
-					fontFamily: "monospace",
 				}}
 			>
 				{componentState.displayedMessages.map((message, index) => (

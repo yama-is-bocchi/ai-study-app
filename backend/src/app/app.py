@@ -25,7 +25,6 @@ class App:
 
     _cache_limit = 15
     _oldest_question_limit = 8
-    _oldest_memo_limit = 365
 
     def __init__(self, config: Config) -> None:
         # psqlクライアントを追加
@@ -152,10 +151,10 @@ class App:
         logger.info("The acquired data is stored in the storage...")
         return self._storage_client.save_file(file_name, file_data)
 
-    def get_all_memo_from_storage(self) -> list[FileInfo]:
+    def get_all_memo_from_storage(self, limit: int) -> list[FileInfo]:
         """ストレージに保存されているファイルを全て読み込んで返す."""
         logger.info("Getting all files in storage...")
-        return self._storage_client.read_all_markdown_files(self._oldest_memo_limit)
+        return self._storage_client.read_all_markdown_files(limit)
 
     def delete_file_from_storage(self, file_name: str) -> None:
         """ストレージ内のファイルを削除する."""
