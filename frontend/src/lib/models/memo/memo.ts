@@ -1,4 +1,4 @@
-export type MemoListData = {
+export type MemoData = {
 	name: string;
 	data: string;
 };

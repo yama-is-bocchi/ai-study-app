@@ -1,12 +1,12 @@
 import { useCallback, useState } from "react";
-import { getMemoListData } from "../../api/storage";
-import type { MemoListData } from "../../models/memo";
+import { getMemoDataList } from "../../api/storage";
+import type { MemoData } from "../../models/memo";
 
 export function useServerStorage() {
 	const [loading, setLoading] = useState(false);
-	const getMemoList = useCallback((): Promise<MemoListData[]> => {
+	const getMemoList = useCallback((): Promise<MemoData[]> => {
 		setLoading(true);
-		return getMemoListData()
+		return getMemoDataList()
 			.catch((error) => {
 				notifications.show({
 					color: "red",

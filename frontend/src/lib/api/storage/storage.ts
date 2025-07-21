@@ -1,8 +1,8 @@
-import type { MemoListData } from "../../models/memo";
+import type { MemoData } from "../../models/memo";
 import { kyClient } from "../kyClient/kyClient";
 
-export function getMemoListData(): Promise<MemoListData[]> {
+export function getMemoDataList(): Promise<MemoData[]> {
 	return kyClient
 		.get("/api/v1/files/memo")
-		.then((response) => response.json<MemoListData[]>());
+		.then((response) => response.json<MemoData[]>());
 }

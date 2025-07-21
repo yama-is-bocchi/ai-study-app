@@ -1,13 +1,11 @@
 import { Loader } from "@mantine/core";
-import MDEditor from "@uiw/react-md-editor";
 import { useCallback, useEffect, useState } from "react";
+import { MemoCard } from "../../lib/components/MemoCard";
 import { useServerStorage } from "../../lib/hooks/useServerStorage";
-import type { MemoListData } from "../../lib/models/memo";
+import type { MemoData } from "../../lib/models/memo";
 export function MemoNote() {
 	const [loading, { getMemoList }] = useServerStorage();
-	const [memoList, setMemoList] = useState<MemoListData[] | undefined>(
-		undefined,
-	);
+	const [memoList, setMemoList] = useState<MemoData[] | undefined>(undefined);
 	const refreshMemoList = useCallback(() => {
 		getMemoList().then((memo) => {
 			setMemoList(memo);
@@ -22,10 +20,7 @@ export function MemoNote() {
 			{memoList
 				? memoList.map((memo) => (
 						<>
-							<MDEditor.Markdown
-								source={memo.name}
-								style={{ textAlign: "left" }}
-							/>
+							<MemoCard memo={memo} uploadFileBehavior={() => {}} />
 						</>
 					))
 				: undefined}
