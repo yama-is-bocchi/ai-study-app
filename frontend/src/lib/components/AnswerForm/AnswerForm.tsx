@@ -5,9 +5,8 @@ import {
 	IconStairsUp,
 	IconX,
 } from "@tabler/icons-react";
+import MDEditor from "@uiw/react-md-editor";
 import { useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import { useQuestionAPI } from "../../hooks/useQuestionAPI";
 import type { Question } from "../../models/question";
 
@@ -86,10 +85,10 @@ export function AnswerForm({
 				>
 					{loading ? <Loader /> : undefined}
 					<Box style={{ textAlign: "left" }}>
-						{commentary.length > 0 ? <Text size="28px">解説</Text> : undefined}
-						<ReactMarkdown remarkPlugins={[remarkGfm]}>
-							{commentary}
-						</ReactMarkdown>
+						<MDEditor.Markdown
+							source={commentary}
+							style={{ textAlign: "left" }}
+						/>
 					</Box>
 				</Box>
 				<Button

@@ -54,6 +54,9 @@ export function TopTab() {
 					value="Blog"
 					style={{ display: tabsVisible ? "" : "none" }}
 					leftSection={<IconBubbleText size={24} />}
+					onClick={() => {
+						navigate("/memo");
+					}}
 				>
 					Blog
 				</Tabs.Tab>

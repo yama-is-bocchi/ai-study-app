@@ -12,9 +12,8 @@ import {
 	IconChevronCompactUp,
 	IconMessageCircleSearch,
 } from "@tabler/icons-react";
+import MDEditor from "@uiw/react-md-editor";
 import { useCallback, useReducer } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import type { Question } from "../../models/question";
 import { incorrectAnswerCardReducer } from "./incorrectAnswerCardReducer";
 
@@ -174,12 +173,10 @@ export function IncorrectAnswerCard({
 							state.isOpenComment ? (
 								<>
 									<Box style={{ textAlign: "left" }}>
-										{state.comment.length > 0 ? (
-											<Text size="28px">解説</Text>
-										) : undefined}
-										<ReactMarkdown remarkPlugins={[remarkGfm]}>
-											{state.comment}
-										</ReactMarkdown>
+										<MDEditor.Markdown
+											source={state.comment}
+											style={{ textAlign: "left" }}
+										/>
 									</Box>
 									<IconChevronCompactUp
 										style={{ cursor: "pointer" }}
