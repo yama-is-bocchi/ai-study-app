@@ -75,7 +75,6 @@ export function AnswerForm({
 						commentary.length > 0
 							? {
 									padding: "20px",
-									backgroundColor: "#f9f9f9",
 									borderRadius: "8px",
 									border: "1px solid #ddd",
 									boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
@@ -84,12 +83,10 @@ export function AnswerForm({
 					}
 				>
 					{loading ? <Loader /> : undefined}
-					<Box style={{ textAlign: "left" }}>
-						<MDEditor.Markdown
-							source={commentary}
-							style={{ textAlign: "left" }}
-						/>
-					</Box>
+					<MDEditor.Markdown
+						source={commentary}
+						style={{ textAlign: "left", padding: "10px" }}
+					/>
 				</Box>
 				<Button
 					style={{ marginTop: "10px" }}
