@@ -1,6 +1,10 @@
+from pathlib import Path
+
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from app import App, AppContext, get_app_context
 from util import get_logger
@@ -25,6 +29,16 @@ class Server:
         self._api_router.include_router(question_api_router, prefix="/api/v1/question")
         self._api_router.include_router(storage_api_router, prefix="/api/v1/files")
         logger.info("Successful create server")
+
+        # UIを配信
+        frontend_dist = Path(config.react_static_content_path)
+        if frontend_dist.exists():
+            self._api_router.mount("/ui", StaticFiles(directory=frontend_dist, html=True))
+
+            @self._api_router.get("/ui/{full_path:path}")
+            async def react_router_fallback(full_path: str) -> FileResponse:
+                index_file = frontend_dist / "index.html"
+                return FileResponse(index_file)
 
     async def listen_and_serve(self) -> None:
         """サーバーを起動する."""
