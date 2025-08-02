@@ -70,6 +70,7 @@ class App:
         recent_questions = self._psql_client.get_answered_data(self._oldest_question_limit)
         logger.info("%d responses were obtained", len(recent_questions))
 
+        # TODO: researchツールを使わせた結果のレポートを含める
         question_prompt, question_input = self._prompt_generator.generate_question_prompt(
             report.report,
             self._field_list,
@@ -99,7 +100,7 @@ class App:
         # 直前に回答した問題
         recent_questions = self._psql_client.get_answered_data(self._oldest_question_limit)
         logger.info("%d responses were obtained", len(recent_questions))
-
+        # TODO: researchツールを使わせた結果のレポートを含める
         question_prompt, question_input = self._prompt_generator.generate_question_prompt(
             "",
             self._field_list,
