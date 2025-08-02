@@ -1,0 +1,23 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${PORT}:8080"
+    env_file:
+      - .env
+
+  db:
+    image: postgres:17
+    container_name: db
+    volumes:
+      - ai-study-app-data:/var/lib/postgresql/data
+    tty: true
+    env_file:
+      - .env
+
+volumes:
+  ai-study-app-data:
+    driver: local

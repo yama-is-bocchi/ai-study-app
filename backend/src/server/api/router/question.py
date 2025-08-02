@@ -9,7 +9,7 @@ question_api_router = APIRouter()
 """課題のREST APIのエンドポイントを定義"""
 
 
-@question_api_router.get("/")
+@question_api_router.get("")
 async def get_question(
     context: Annotated[AppContext, Depends(get_app_context)],
     mode: Annotated[QuestionMode, Query(...)],

@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -33,17 +33,21 @@ class Server:
         # UIを配信
         frontend_dist = Path(config.react_static_content_path)
         if frontend_dist.exists():
-            self._api_router.mount("/ui", StaticFiles(directory=frontend_dist, html=True))
+            self._api_router.mount("/assets", StaticFiles(directory=frontend_dist / "assets"), name="assets")
 
-            @self._api_router.get("/ui/{full_path:path}")
-            async def react_router_fallback(full_path: str) -> FileResponse:
-                index_file = frontend_dist / "index.html"
-                return FileResponse(index_file)
+        @self._api_router.get("/{full_path:path}")
+        async def spa_fallback(full_path: str, request: Request) -> FileResponse:
+            if full_path.startswith(("api/", "assets/")):
+                raise HTTPException(status_code=404)
+            index_path = frontend_dist / "index.html"
+            if not index_path.exists():
+                raise HTTPException(status_code=500, detail="index.html not found")
+            return FileResponse(index_path)
 
     async def listen_and_serve(self) -> None:
         """サーバーを起動する."""
         if self.config.cors_allow_origin:
             self._api_router.add_middleware(CORSMiddleware, allow_origins=self.config.cors_allow_origin)
-        config = uvicorn.Config(self._api_router, port=self.config.port, loop="asyncio")
+        config = uvicorn.Config(self._api_router, host="0.0.0.0", port=self.config.port, loop="asyncio")  # noqa: S104
         server = uvicorn.Server(config)
         await server.serve()

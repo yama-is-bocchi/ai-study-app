@@ -1,0 +1,12 @@
+.devcontainer/
+
+# Git
+.git
+.gitignore
+
+.env.example
+README.md
+
+frontend/dist
+backend/.venv
+backend/node_modules
