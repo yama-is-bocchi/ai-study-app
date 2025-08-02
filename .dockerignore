@@ -8,5 +8,6 @@
 README.md
 
 frontend/dist
+frontend/node_modules
 backend/.venv
-backend/node_modules
+mcp-servers/question-report-generator/.venv

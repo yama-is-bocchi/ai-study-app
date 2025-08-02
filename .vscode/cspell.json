@@ -28,6 +28,7 @@
         "tzdata",
         "zoneinfo",
         "localtime",
-        "initdb"
+        "initdb",
+        "fastmcp"
     ]
 }
