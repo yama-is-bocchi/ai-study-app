@@ -6,6 +6,8 @@ services:
     restart: unless-stopped
     ports:
       - "${PORT}:8080"
+    volumes:
+      - ai-study-app-server-data:/app/backend/data
     env_file:
       - .env
 
@@ -13,11 +15,15 @@ services:
     image: postgres:17
     container_name: db
     volumes:
-      - ai-study-app-data:/var/lib/postgresql/data
+      - ai-study-app-psql-data:/var/lib/postgresql/data
     tty: true
-    env_file:
-      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      TZ: 'Asia/Tokyo'
 
 volumes:
-  ai-study-app-data:
+  ai-study-app-psql-data:
+    driver: local
+  ai-study-app-server-data:
     driver: local

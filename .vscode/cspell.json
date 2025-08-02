@@ -27,6 +27,7 @@
         "Verdana",
         "tzdata",
         "zoneinfo",
-        "localtime"
+        "localtime",
+        "initdb"
     ]
 }

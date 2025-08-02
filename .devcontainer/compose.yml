@@ -24,6 +24,7 @@ services:
     environment:
       POSTGRES_USER: 'vscode'
       POSTGRES_PASSWORD: 'postgres'
+      TZ: 'Asia/Tokyo'
     tty: true
 
 volumes:

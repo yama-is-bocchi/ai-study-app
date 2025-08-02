@@ -11,8 +11,11 @@ export function AppRouter() {
 			<Routes>
 				<Route path="/" element={<Layout />}>
 					<Route index element={<Home />} />
-					<Route path="ai" element={<QuestionMode mode="ai" />} />
-					<Route path="normal" element={<QuestionMode mode="random" />} />
+					<Route path="ai" element={<QuestionMode key="ai" mode="ai" />} />
+					<Route
+						path="normal"
+						element={<QuestionMode key="random" mode="random" />}
+					/>
 					<Route path="incorrect" element={<IncorrectAnswers />} />
 					<Route path="memo" element={<MemoNote />} />
 				</Route>
