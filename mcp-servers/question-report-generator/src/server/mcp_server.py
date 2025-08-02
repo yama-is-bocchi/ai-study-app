@@ -17,10 +17,10 @@ class MCPServer:
         mcp = FastMCP(__name__)
 
         @mcp.tool()
-        def search_report(report: str) -> str:
+        def search_report() -> str:
             """問題をの参考になるレポートをシラバスなどから調査してレポートをまとめる."""
             try:
-                result = self.researcher.research(report)
+                result = self.researcher.research()
             except Exception:
                 logger.exception("failed to search report:")
                 return "レポートの検索が失敗しました。"

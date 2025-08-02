@@ -7,7 +7,11 @@ dependencies = [
     "langchain>=0.3.19",
     "langchain-openai>=0.3.7",
     "mcp>=1.6.0",
-    "markitdown>=0.1.2"
+    "markitdown>=0.1.2",
+    "cffi==1.17.1",
+    "cryptography==45.0.5",
+    "pdfminer-six==20250506",
+    "pycparser==2.22"
 ]
 
 [dependency-groups]
