@@ -51,7 +51,7 @@ class ConfigLoader:
             raise Exception(msg)
 
         tools = self._mcp_client.get_tools()
-        llm = ChatOpenAI(model=str(openai_model), temperature=0, verbose=True)
+        llm = ChatOpenAI(model=str(openai_model), temperature=1, verbose=True)
         prompt = load_system_prompt_file(SYSTEM_PROMPT_PATH)
         analysis_agent = AnalysisAgent(llm, tools, prompt)
 

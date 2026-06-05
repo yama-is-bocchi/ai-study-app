@@ -173,6 +173,7 @@ export function IncorrectAnswerCard({
 								<>
 									<Box style={{ textAlign: "left" }}>
 										<MDEditor.Markdown
+											className="markdown-preview"
 											source={state.comment}
 											style={{ textAlign: "left", padding: "10px" }}
 										/>

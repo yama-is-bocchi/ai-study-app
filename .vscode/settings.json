@@ -62,7 +62,7 @@
         "files.insertFinalNewline": true
     },
     "biome.lsp": {
-        "bin": "/workspace/frontend/node_modules/.bin/biome",
+        "bin": "/workspace/frontend/node_modules/@biomejs/biome/bin/biome",
         "configurationPath": "/workspace/frontend/biome.json",
     },
 }

@@ -83,6 +83,7 @@ export function AnswerForm({
 				>
 					{loading ? <Loader /> : undefined}
 					<MDEditor.Markdown
+						className="markdown-preview"
 						source={commentary}
 						style={{ textAlign: "left", padding: "10px" }}
 					/>

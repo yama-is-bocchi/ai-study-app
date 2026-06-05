@@ -54,6 +54,7 @@ export function MemoCard({
 			</Button>
 			<MDEditor.Markdown
 				source={state.memo}
+				className="markdown-preview"
 				style={{
 					padding: "15px",
 					border: "1px solid black",

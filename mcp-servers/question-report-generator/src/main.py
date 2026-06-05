@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO)
 
 def main() -> None:
     load_dotenv()
-    base_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    base_llm = ChatOpenAI(model="gpt-4o-mini", temperature=1)
     researcher = MarkDownFileResearcher(base_llm, Path(os.getenv("RESEARCH_TARGET_PATH", "data/markdown")))
     mcp_server = MCPServer(researcher)
     mcp_server.run("stdio")
